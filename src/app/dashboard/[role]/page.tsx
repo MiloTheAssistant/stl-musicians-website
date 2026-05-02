@@ -36,10 +36,6 @@ const dashboardCards = {
   ],
 } as const;
 
-export function generateStaticParams() {
-  return userRoles.map((role) => ({ role: role.id }));
-}
-
 export async function generateMetadata({
   params,
 }: {

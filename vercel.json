@@ -3,7 +3,13 @@
   "cleanUrls": true,
   "redirects": [
     {
-      "source": "https://www.stl-musicians.com/:path*",
+      "source": "/:path*",
+      "has": [
+        {
+          "type": "host",
+          "value": "www.stl-musicians.com"
+        }
+      ],
       "destination": "https://stl-musicians.com/:path*",
       "permanent": true
     }

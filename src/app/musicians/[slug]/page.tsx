@@ -1,10 +1,6 @@
 import { notFound } from "next/navigation";
 import { ButtonLink, Eyebrow, SectionShell, Tag } from "@/components/ui";
-import { artistProfiles, getArtistBySlug } from "@/lib/content";
-
-export function generateStaticParams() {
-  return artistProfiles.map((artist) => ({ slug: artist.slug }));
-}
+import { getArtistBySlug } from "@/lib/content";
 
 export async function generateMetadata({
   params,

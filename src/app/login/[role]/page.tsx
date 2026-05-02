@@ -4,10 +4,6 @@ import { ButtonLink, Eyebrow, SectionShell } from "@/components/ui";
 import { authPortals } from "@/lib/content";
 import { isKnownRole, userRoles } from "@/lib/roles";
 
-export function generateStaticParams() {
-  return userRoles.map((role) => ({ role: role.id }));
-}
-
 export async function generateMetadata({
   params,
 }: {
