@@ -1,0 +1,11 @@
+{
+  "framework": "nextjs",
+  "cleanUrls": true,
+  "redirects": [
+    {
+      "source": "https://www.stl-musicians.com/:path*",
+      "destination": "https://stl-musicians.com/:path*",
+      "permanent": true
+    }
+  ]
+}

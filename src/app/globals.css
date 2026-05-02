@@ -1,0 +1,54 @@
+@import "tailwindcss";
+
+:root {
+  --background: #11110f;
+  --foreground: #f5ead2;
+  --muted: #c8b894;
+  --brass: #b58b2a;
+  --brass-light: #d8b765;
+  --oxblood: #4b171c;
+  --river: #21314d;
+  --clay: #8f4a2f;
+  --ink: #090907;
+  --stage: #1b1a17;
+  --line: rgba(245, 234, 210, 0.14);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: "Geist", "Geist Fallback", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", "Geist Mono Fallback", ui-monospace, monospace;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+}
+
+::selection {
+  background: var(--brass);
+  color: var(--ink);
+}
+
+.grain {
+  background-image:
+    linear-gradient(rgba(245, 234, 210, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(245, 234, 210, 0.03) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.record-visual {
+  background:
+    radial-gradient(circle at 28% 42%, transparent 0 16%, #0a0a09 16.5% 17%, transparent 17.5%),
+    repeating-radial-gradient(circle at 28% 42%, #171611 0 8px, #0b0b09 8px 14px),
+    linear-gradient(135deg, #342019, #11110f 45%, #21314d);
+}
+
+.stage-visual {
+  background:
+    linear-gradient(115deg, rgba(181, 139, 42, 0.82) 0 14%, transparent 14.5%),
+    linear-gradient(145deg, rgba(75, 23, 28, 0.95) 0 42%, rgba(33, 49, 77, 0.9) 42.5% 68%, rgba(17, 17, 15, 0.95) 68.5%),
+    radial-gradient(circle at 20% 25%, rgba(216, 183, 101, 0.25), transparent 34%);
+}
