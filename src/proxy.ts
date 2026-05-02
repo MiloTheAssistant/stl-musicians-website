@@ -9,9 +9,11 @@ const hasClerkEnv =
 
 export const proxy = hasClerkEnv
   ? clerkMiddleware(async (auth, req) => {
-  if (hasClerkEnv && isProtectedRoute(req)) {
-    await auth.protect();
-  }
+      if (hasClerkEnv && isProtectedRoute(req)) {
+        await auth.protect({
+          unauthenticatedUrl: new URL("/sign-in", req.url).toString(),
+        });
+      }
     })
   : function proxy() {
       return NextResponse.next();

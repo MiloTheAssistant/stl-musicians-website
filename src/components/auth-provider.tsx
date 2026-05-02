@@ -5,5 +5,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return children;
   }
 
-  return <ClerkProvider>{children}</ClerkProvider>;
+  return (
+    <ClerkProvider
+      signInUrl="/sign-in"
+      signUpUrl="/sign-up"
+      signInFallbackRedirectUrl="/dashboard"
+      signUpFallbackRedirectUrl="/dashboard"
+    >
+      {children}
+    </ClerkProvider>
+  );
 }
