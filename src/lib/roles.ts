@@ -14,7 +14,7 @@ export const userRoles: UserRole[] = [
     label: "Musician / Band",
     headline: "Promote your sound and get found by the right rooms.",
     description:
-      "Build an EPK-style profile, share releases, post events, and prepare promotion requests.",
+      "Manage your public profile, music, photos, videos, shows, and paid promotion requests.",
     dashboardHref: "/dashboard/musician",
   },
   {
@@ -22,7 +22,7 @@ export const userRoles: UserRole[] = [
     label: "Promoter",
     headline: "Find serious artists and coordinate stronger shows.",
     description:
-      "Discover local talent, manage saved artists, and shape future promotion opportunities.",
+      "Build campaigns, save artists, coordinate show opportunities, and track promotion outreach.",
     dashboardHref: "/dashboard/promoter",
   },
   {
@@ -30,7 +30,7 @@ export const userRoles: UserRole[] = [
     label: "Member / Small Venue",
     headline: "Connect directly with musicians for rooms, events, and private dates.",
     description:
-      "Save profiles, submit event interest, and communicate with musicians without getting lost in DMs.",
+      "Save favorite artists, request availability, plan private or venue bookings, and message directly.",
     dashboardHref: "/dashboard/member",
   },
   {
@@ -38,7 +38,7 @@ export const userRoles: UserRole[] = [
     label: "Admin",
     headline: "Keep the scene curated, current, and trustworthy.",
     description:
-      "Review profiles, approve events, manage featured content, and monitor future paid promotion flows.",
+      "Review new profiles, curate events, monitor reports, and keep platform content trustworthy.",
     dashboardHref: "/dashboard/admin",
   },
 ];

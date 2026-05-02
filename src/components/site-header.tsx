@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AudioLines, CalendarDays, LayoutDashboard, MapPin, Music2 } from "lucide-react";
+import { AudioLines, CalendarDays, MapPin, Music2 } from "lucide-react";
 import { ButtonLink } from "@/components/ui";
 import { siteConfig } from "@/lib/content";
 
@@ -7,13 +7,12 @@ const navItems = [
   { href: "/musicians", label: "Musicians", icon: Music2 },
   { href: "/events", label: "Events", icon: CalendarDays },
   { href: "/venues", label: "Venues", icon: MapPin },
-  { href: "/dashboard", label: "Dashboards", icon: LayoutDashboard },
 ];
 
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--line)] bg-[rgba(17,17,15,0.88)] backdrop-blur">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+      <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-3">
           <span className="flex size-10 items-center justify-center rounded-md bg-[var(--brass)] text-[var(--ink)]">
             <AudioLines className="size-5" aria-hidden />
@@ -27,7 +26,7 @@ export function SiteHeader() {
             </span>
           </span>
         </Link>
-        <nav className="hidden items-center gap-1 lg:flex">
+        <nav className="order-3 flex w-full items-center justify-center gap-1 md:order-none md:w-auto md:justify-start">
           {navItems.map((item) => (
             <Link
               key={item.href}
@@ -40,10 +39,7 @@ export function SiteHeader() {
           ))}
         </nav>
         <div className="flex items-center gap-2">
-          <ButtonLink href="/login/musician" variant="secondary" className="hidden sm:inline-flex">
-            Musician Login
-          </ButtonLink>
-          <ButtonLink href="/sign-up">Join</ButtonLink>
+          <ButtonLink href="/dashboard">Sign-Up / Sign-In</ButtonLink>
         </div>
       </div>
     </header>
