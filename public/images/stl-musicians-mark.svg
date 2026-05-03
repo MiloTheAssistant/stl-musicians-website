@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">STL-Musicians.com monogram mark</title>
+  <desc id="desc">A crisp STL monogram with music-wave accents in brass and cream on an ink square.</desc>
+  <defs>
+    <linearGradient id="brass" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#f1d78a"/>
+      <stop offset=".48" stop-color="#d8b765"/>
+      <stop offset="1" stop-color="#b58b2a"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="96" fill="#090907"/>
+  <rect x="28" y="28" width="456" height="456" rx="72" fill="none" stroke="url(#brass)" stroke-width="22"/>
+  <path d="M118 330h276" fill="none" stroke="url(#brass)" stroke-linecap="round" stroke-width="34"/>
+  <path d="M152 330V142h116" fill="none" stroke="url(#brass)" stroke-linecap="round" stroke-linejoin="round" stroke-width="34"/>
+  <path d="M240 330V142h116" fill="none" stroke="url(#brass)" stroke-linecap="round" stroke-linejoin="round" stroke-width="34"/>
+  <path d="M360 142v188" fill="none" stroke="url(#brass)" stroke-linecap="round" stroke-width="34"/>
+  <path d="M152 238c31-38 65-56 104-56s73 18 104 56" fill="none" stroke="#f5ead2" stroke-linecap="round" stroke-width="22"/>
+  <path d="M152 394c31-24 65-36 104-36s73 12 104 36" fill="none" stroke="#f5ead2" stroke-linecap="round" stroke-width="22"/>
+</svg>

@@ -123,13 +123,15 @@ export default async function RoleDashboardPage({
 
   return (
     <SectionShell>
-      <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-        <div>
+      <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(220px,280px)] lg:items-end">
+        <div className="min-w-0">
           <Eyebrow>{config.label}</Eyebrow>
-          <h1 className="mt-3 text-5xl font-black">{config.headline}</h1>
+          <h1 className="mt-3 max-w-5xl text-4xl font-black leading-[0.98] sm:text-5xl lg:text-6xl">
+            {config.headline}
+          </h1>
           <p className="mt-4 max-w-2xl text-[var(--muted)]">{config.description}</p>
         </div>
-        <div className="rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.06)] px-4 py-3 text-sm">
+        <div className="rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.06)] px-4 py-3 text-sm lg:justify-self-end">
           <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-[var(--brass-light)]">
             Account
           </p>
@@ -139,20 +141,20 @@ export default async function RoleDashboardPage({
       </div>
       {musicianDashboardBand && (
         <section className="mt-10 overflow-hidden rounded-lg border border-[var(--line)] bg-[var(--ink)]">
-          <div className="grid gap-6 border-b border-[var(--line)] bg-[rgba(245,234,210,0.05)] p-5 lg:grid-cols-[180px_1fr_auto] lg:items-center">
-            <div className="flex min-h-32 items-center justify-center rounded-md border border-[rgba(245,234,210,0.36)] bg-[var(--muted)] p-4">
+          <div className="grid gap-5 border-b border-[var(--line)] bg-[rgba(245,234,210,0.05)] p-4 sm:p-5 lg:grid-cols-[minmax(120px,160px)_minmax(0,1fr)] lg:items-center xl:grid-cols-[minmax(130px,168px)_minmax(0,1fr)_auto]">
+            <div className="flex aspect-[4/3] w-full max-w-40 items-center justify-center rounded-md border border-[rgba(245,234,210,0.36)] bg-[var(--muted)] p-3 sm:max-w-44">
               <Image
                 src={musicianDashboardBand.logoImage}
                 alt="Case44 band logo"
                 width={360}
                 height={160}
-                className="h-auto w-full object-contain"
+                className="max-h-full w-full object-contain"
                 priority
               />
             </div>
-            <div>
+            <div className="min-w-0">
               <Eyebrow>Case44 Workspace</Eyebrow>
-              <h2 className="mt-2 text-3xl font-black">
+              <h2 className="mt-2 max-w-3xl text-2xl font-black leading-tight sm:text-3xl">
                 Administer {musicianDashboardBand.name} on STL-Musicians.com
               </h2>
               <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
@@ -170,19 +172,20 @@ export default async function RoleDashboardPage({
                 )}
               </div>
             </div>
-            <div className="flex flex-col gap-3 sm:flex-row">
+            <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap xl:max-w-80 xl:justify-end">
               <ButtonLink
                 href={musicianDashboardBand.websiteUrl}
                 target="_blank"
                 rel="noreferrer"
                 variant="secondary"
+                className="w-full sm:w-auto"
               >
                 <span className="inline-flex items-center gap-2">
                   Open public website
                   <ExternalLink className="size-4" aria-hidden />
                 </span>
               </ButtonLink>
-              <ButtonLink href="#merch">
+              <ButtonLink href="#merch" className="w-full sm:w-auto">
                 <span className="inline-flex items-center gap-2">
                   Edit Products
                   <Package className="size-4" aria-hidden />

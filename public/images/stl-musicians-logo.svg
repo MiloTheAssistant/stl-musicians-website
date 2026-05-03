@@ -1,10 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
-  <title id="title">STL Musicians logo mark</title>
-  <desc id="desc">A brass square logo with a black arch, stage wave bars, and a small spotlight dot.</desc>
-  <rect width="512" height="512" rx="88" fill="#b58b2a"/>
-  <rect x="24" y="24" width="464" height="464" rx="68" fill="none" stroke="#f5ead2" stroke-opacity=".28" stroke-width="12"/>
-  <path d="M104 338C133 191 189 112 256 112s123 79 152 226" fill="none" stroke="#090907" stroke-linecap="round" stroke-width="42"/>
-  <path d="M144 340h224" fill="none" stroke="#090907" stroke-linecap="round" stroke-width="42"/>
-  <path d="M176 276v-74M240 338V198M304 338V224M368 276v-58" fill="none" stroke="#090907" stroke-linecap="round" stroke-width="34"/>
-  <circle cx="382" cy="148" r="24" fill="#090907"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 240" role="img" aria-labelledby="title desc">
+  <title id="title">STL-Musicians.com logo</title>
+  <desc id="desc">A premium STL monogram and music-wave mark with a horizontal STL-Musicians.com wordmark.</desc>
+  <defs>
+    <linearGradient id="brass" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#f1d78a"/>
+      <stop offset=".48" stop-color="#d8b765"/>
+      <stop offset="1" stop-color="#b58b2a"/>
+    </linearGradient>
+  </defs>
+  <rect width="240" height="240" rx="46" fill="#090907"/>
+  <rect x="13" y="13" width="214" height="214" rx="36" fill="none" stroke="url(#brass)" stroke-width="10"/>
+  <path d="M58 157h124" fill="none" stroke="url(#brass)" stroke-linecap="round" stroke-width="15"/>
+  <path d="M73 157V69h52" fill="none" stroke="url(#brass)" stroke-linecap="round" stroke-linejoin="round" stroke-width="15"/>
+  <path d="M112 157V69h52" fill="none" stroke="url(#brass)" stroke-linecap="round" stroke-linejoin="round" stroke-width="15"/>
+  <path d="M164 69v88" fill="none" stroke="url(#brass)" stroke-linecap="round" stroke-width="15"/>
+  <path d="M74 114c14-17 29-25 46-25s32 8 46 25" fill="none" stroke="#f5ead2" stroke-linecap="round" stroke-width="10"/>
+  <path d="M74 186c14-11 29-16 46-16s32 5 46 16" fill="none" stroke="#f5ead2" stroke-linecap="round" stroke-width="10"/>
+  <path d="M292 72h416" fill="none" stroke="url(#brass)" stroke-linecap="round" stroke-width="5"/>
+  <text x="292" y="136" fill="#f5ead2" font-family="Arial, Helvetica, sans-serif" font-size="58" font-weight="900" letter-spacing="3">STL-MUSICIANS</text>
+  <text x="292" y="183" fill="#d8b765" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" letter-spacing="5">ST. LOUIS MUSIC DISCOVERY</text>
+  <circle cx="915" cy="82" r="12" fill="url(#brass)"/>
+  <path d="M850 158c18-18 37-27 58-27s40 9 58 27" fill="none" stroke="url(#brass)" stroke-linecap="round" stroke-width="9"/>
 </svg>

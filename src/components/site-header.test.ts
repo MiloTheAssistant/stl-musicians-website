@@ -1,6 +1,7 @@
 import { Show, SignOutButton } from "@clerk/nextjs";
 import { isValidElement, type ReactNode } from "react";
 import { describe, expect, it } from "vitest";
+import { BrandLogo } from "./brand-logo";
 import { SiteHeader } from "./site-header";
 
 type LinkMatch = {
@@ -74,6 +75,15 @@ function findElementByType<TProps extends { children?: ReactNode }>(
 }
 
 describe("SiteHeader", () => {
+  it("renders a professional STL-Musicians brand lockup for the header", () => {
+    const logo = BrandLogo({ variant: "header" });
+    const text = getText(logo);
+
+    expect(text).toContain("STL-Musicians.com");
+    expect(text).toContain("St. Louis music discovery");
+    expect(text).not.toContain("STL MusiciansSt. Louis");
+  });
+
   it("uses one sign-up and sign-in link for dashboard access", () => {
     const links = collectLinks(SiteHeader());
     const labels = links.map((link) => link.text);
