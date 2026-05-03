@@ -1,6 +1,6 @@
 import { Show, SignOutButton } from "@clerk/nextjs";
 import Link from "next/link";
-import { AudioLines, CalendarDays, MapPin, Music2 } from "lucide-react";
+import { CalendarDays, MapPin, Music2 } from "lucide-react";
 import { ButtonLink } from "@/components/ui";
 import { siteConfig } from "@/lib/content";
 
@@ -16,13 +16,11 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--line)] bg-[rgba(17,17,15,0.88)] backdrop-blur">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center gap-3">
-          <span className="flex size-10 items-center justify-center rounded-md bg-[var(--brass)] text-[var(--ink)]">
-            <AudioLines className="size-5" aria-hidden />
-          </span>
+        <Link href="/" className="flex items-center gap-3" aria-label={`${siteConfig.name} home`}>
+          <LogoMark />
           <span className="leading-tight">
-            <span className="block text-sm font-black uppercase text-[var(--foreground)]">
-              {siteConfig.name}
+            <span className="block text-sm font-black uppercase tracking-[0.08em] text-[var(--foreground)]">
+              STL Musicians
             </span>
             <span className="hidden text-xs text-[var(--muted)] sm:block">
               St. Louis music discovery
@@ -69,5 +67,39 @@ export function SiteHeader() {
         </div>
       </div>
     </header>
+  );
+}
+
+function LogoMark() {
+  return (
+    <span className="flex size-11 items-center justify-center rounded-md border border-[rgba(245,234,210,0.18)] bg-[var(--brass)] text-[var(--ink)] shadow-[0_0_24px_rgba(181,139,42,0.28)]">
+      <svg
+        aria-hidden
+        className="size-8"
+        fill="none"
+        viewBox="0 0 64 64"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M13 42C16.8 24 23.8 14 32 14s15.2 10 19 28"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeWidth="5"
+        />
+        <path
+          d="M18 42h28"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeWidth="5"
+        />
+        <path
+          d="M22 34v-8M30 42V25M38 42V29M46 34v-6"
+          stroke="currentColor"
+          strokeLinecap="round"
+          strokeWidth="4"
+        />
+        <circle cx="48" cy="18" fill="currentColor" r="3" />
+      </svg>
+    </span>
   );
 }

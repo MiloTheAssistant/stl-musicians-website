@@ -7,6 +7,7 @@ import {
   Sparkles,
   Users,
 } from "lucide-react";
+import Image from "next/image";
 import { ButtonLink, Eyebrow, SectionShell, Tag } from "@/components/ui";
 import {
   artistProfiles,
@@ -27,11 +28,19 @@ const stats = [
 export default function Home() {
   return (
     <>
-      <section className="relative overflow-hidden border-b border-[var(--line)]">
-        <div className="absolute inset-0 stage-visual opacity-70" aria-hidden />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,var(--background)_0%,rgba(17,17,15,0.78)_48%,rgba(17,17,15,0.2)_100%)]" />
-        <div className="relative mx-auto grid min-h-[calc(100svh-73px)] max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[1fr_0.86fr] lg:px-8">
-          <div className="max-w-3xl">
+      <section className="relative overflow-hidden border-b border-[var(--line)] bg-[var(--ink)]">
+        <Image
+          src="/images/hero-ai-02.png"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(9,9,7,0.9)_0%,rgba(17,17,15,0.7)_42%,rgba(17,17,15,0.28)_100%)] lg:bg-[linear-gradient(90deg,rgba(9,9,7,0.4)_0%,rgba(17,17,15,0.46)_38%,rgba(9,9,7,0.94)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(9,9,7,0.4)_0%,rgba(9,9,7,0.1)_44%,rgba(9,9,7,0.84)_100%)]" />
+        <div className="relative mx-auto grid min-h-[calc(100svh-73px)] max-w-7xl items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[0.82fr_1.18fr] lg:px-8">
+          <div className="max-w-3xl lg:col-start-2">
             <Eyebrow>StageLink STL / Launch Platform</Eyebrow>
             <h1 className="mt-5 text-5xl font-black leading-[0.94] text-[var(--foreground)] sm:text-7xl lg:text-8xl">
               Where St. Louis music gets discovered, promoted, and booked.
@@ -58,25 +67,11 @@ export default function Home() {
               ))}
             </div>
           </div>
-          <div className="hidden lg:block">
-            <div className="record-visual relative aspect-[4/5] overflow-hidden rounded-lg border border-[var(--line)] shadow-2xl">
-              <div className="absolute inset-x-8 bottom-8 rounded-md bg-[rgba(9,9,7,0.86)] p-6 backdrop-blur">
-                <p className="font-mono text-xs uppercase tracking-[0.2em] text-[var(--brass-light)]">
-                  Featured Tonight
-                </p>
-                <h2 className="mt-3 text-3xl font-black">River City New Music Night</h2>
-                <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
-                  Jazz horns, hip-hop releases, rock clubs, country rooms, and
-                  everything current across the STL metro.
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
       <SectionShell>
-        <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr]">
+        <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-center">
           <div>
             <Eyebrow>Discovery Engine</Eyebrow>
             <h2 className="mt-3 text-4xl font-black">Built around the actual scene.</h2>
@@ -85,15 +80,23 @@ export default function Home() {
               and role-specific portals give the site a real product spine from day one.
             </p>
           </div>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-            {coreGenres.map((genre) => (
-              <div
-                key={genre}
-                className="rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.05)] p-4 text-sm font-bold"
-              >
-                {genre}
-              </div>
-            ))}
+          <div className="grid gap-4 lg:grid-cols-[1fr_0.7fr]">
+            <VisualPanel
+              src="/images/hero-ai-01.png"
+              alt="Packed concert crowd under white and brass stage lights"
+              label="Live Discovery"
+              title="The scene, turned all the way up."
+            />
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1">
+              {coreGenres.slice(0, 5).map((genre) => (
+                <div
+                  key={genre}
+                  className="rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.05)] p-4 text-sm font-bold"
+                >
+                  {genre}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </SectionShell>
@@ -121,11 +124,22 @@ export default function Home() {
         </div>
       </SectionShell>
 
-      <section className="border-y border-[var(--line)] bg-[var(--stage)]">
+      <section className="relative overflow-hidden border-y border-[var(--line)] bg-[var(--stage)]">
+        <Image
+          src="/images/hero-ai-03.png"
+          alt=""
+          fill
+          sizes="100vw"
+          className="object-cover opacity-34"
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(27,26,23,0.96)_0%,rgba(27,26,23,0.82)_48%,rgba(27,26,23,0.7)_100%)]" />
         <SectionShell>
-          <div className="grid gap-5 lg:grid-cols-4">
+          <div className="relative grid gap-5 lg:grid-cols-4">
             {authPortals.map((portal) => (
-              <article key={portal.role} className="rounded-lg border border-[var(--line)] bg-[var(--ink)] p-5">
+              <article
+                key={portal.role}
+                className="rounded-lg border border-[var(--line)] bg-[rgba(9,9,7,0.78)] p-5 shadow-xl backdrop-blur"
+              >
                 <Users className="size-5 text-[var(--brass-light)]" aria-hidden />
                 <h3 className="mt-4 text-xl font-black">{portal.title}</h3>
                 <ul className="mt-4 space-y-2 text-sm text-[var(--muted)]">
@@ -159,17 +173,27 @@ export default function Home() {
       </SectionShell>
 
       <SectionShell className="pt-0">
-        <div className="grid gap-8 lg:grid-cols-2">
-          <div className="rounded-lg border border-[var(--line)] bg-[rgba(33,49,77,0.38)] p-6">
-            <CalendarDays className="size-6 text-[var(--brass-light)]" aria-hidden />
-            <h2 className="mt-4 text-3xl font-black">Upcoming STL signals</h2>
-            <div className="mt-5 space-y-4">
-              {events.slice(0, 3).map((event) => (
-                <div key={event.title} className="border-t border-[var(--line)] pt-4">
-                  <p className="font-bold">{event.title}</p>
-                  <p className="text-sm text-[var(--muted)]">{event.venue}</p>
-                </div>
-              ))}
+        <div className="grid gap-8 lg:grid-cols-[1.08fr_0.92fr]">
+          <div className="relative overflow-hidden rounded-lg border border-[var(--line)] bg-[rgba(33,49,77,0.38)]">
+            <Image
+              src="/images/hero-ai-04.png"
+              alt="Outdoor night concert with crowd, riverfront city lights, and sweeping stage beams"
+              width={1792}
+              height={1024}
+              sizes="(min-width: 1024px) 58vw, 100vw"
+              className="h-72 w-full object-cover"
+            />
+            <div className="p-6">
+              <CalendarDays className="size-6 text-[var(--brass-light)]" aria-hidden />
+              <h2 className="mt-4 text-3xl font-black">Upcoming STL signals</h2>
+              <div className="mt-5 space-y-4">
+                {events.slice(0, 3).map((event) => (
+                  <div key={event.title} className="border-t border-[var(--line)] pt-4">
+                    <p className="font-bold">{event.title}</p>
+                    <p className="text-sm text-[var(--muted)]">{event.venue}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
           <div className="rounded-lg border border-[var(--line)] bg-[rgba(75,23,28,0.42)] p-6">
@@ -202,5 +226,36 @@ export default function Home() {
         </SectionShell>
       </section>
     </>
+  );
+}
+
+function VisualPanel({
+  src,
+  alt,
+  label,
+  title,
+}: {
+  src: string;
+  alt: string;
+  label: string;
+  title: string;
+}) {
+  return (
+    <div className="relative min-h-80 overflow-hidden rounded-lg border border-[var(--line)] bg-[var(--ink)] shadow-2xl">
+      <Image
+        src={src}
+        alt={alt}
+        fill
+        sizes="(min-width: 1024px) 48vw, 100vw"
+        className="object-cover"
+      />
+      <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(9,9,7,0.08)_0%,rgba(9,9,7,0.18)_44%,rgba(9,9,7,0.86)_100%)]" />
+      <div className="absolute inset-x-0 bottom-0 p-5">
+        <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-[var(--brass-light)]">
+          {label}
+        </p>
+        <h3 className="mt-2 text-2xl font-black">{title}</h3>
+      </div>
+    </div>
   );
 }

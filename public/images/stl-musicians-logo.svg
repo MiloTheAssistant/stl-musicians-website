@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">STL Musicians logo mark</title>
+  <desc id="desc">A brass square logo with a black arch, stage wave bars, and a small spotlight dot.</desc>
+  <rect width="512" height="512" rx="88" fill="#b58b2a"/>
+  <rect x="24" y="24" width="464" height="464" rx="68" fill="none" stroke="#f5ead2" stroke-opacity=".28" stroke-width="12"/>
+  <path d="M104 338C133 191 189 112 256 112s123 79 152 226" fill="none" stroke="#090907" stroke-linecap="round" stroke-width="42"/>
+  <path d="M144 340h224" fill="none" stroke="#090907" stroke-linecap="round" stroke-width="42"/>
+  <path d="M176 276v-74M240 338V198M304 338V224M368 276v-58" fill="none" stroke="#090907" stroke-linecap="round" stroke-width="34"/>
+  <circle cx="382" cy="148" r="24" fill="#090907"/>
+</svg>
