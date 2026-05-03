@@ -1,19 +1,23 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
-  <title id="title">STL-Musicians.com monogram mark</title>
-  <desc id="desc">A crisp STL monogram with music-wave accents in brass and cream on an ink square.</desc>
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="512" height="512" rx="96" fill="#080B12"/>
+  <g clip-path="url(#tile)">
+    <path d="M0 0H512V512H0V0Z" fill="#002F6C"/>
+    <path d="M512 0V512H0L512 0Z" fill="#C41E3A"/>
+    <path d="M0 416L416 0H512L96 512H0V416Z" fill="#F5EAD2"/>
+    <path d="M0 488L488 0H512V42L42 512H0V488Z" fill="#B58B2A"/>
+  </g>
+  <rect x="22" y="22" width="468" height="468" rx="82" stroke="#F5EAD2" stroke-width="22"/>
+  <g filter="url(#shadow)">
+    <path d="M316 110V333C316 390 267 430 209 430C163 430 128 404 128 366C128 321 172 289 225 289C245 289 263 293 278 300V178L384 153V104L316 110Z" fill="#F5EAD2"/>
+    <path d="M316 110V333C316 390 267 430 209 430C163 430 128 404 128 366C128 321 172 289 225 289C245 289 263 293 278 300V178L384 153V104L316 110Z" stroke="#080B12" stroke-width="18" stroke-linejoin="round"/>
+  </g>
+  <path d="M278 184L384 159" stroke="#002F6C" stroke-width="18" stroke-linecap="round"/>
   <defs>
-    <linearGradient id="brass" x1="0" x2="1" y1="0" y2="1">
-      <stop offset="0" stop-color="#f1d78a"/>
-      <stop offset=".48" stop-color="#d8b765"/>
-      <stop offset="1" stop-color="#b58b2a"/>
-    </linearGradient>
+    <clipPath id="tile">
+      <rect width="512" height="512" rx="96"/>
+    </clipPath>
+    <filter id="shadow" x="86" y="70" width="340" height="402" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="14" stdDeviation="12" flood-color="#080B12" flood-opacity="0.42"/>
+    </filter>
   </defs>
-  <rect width="512" height="512" rx="96" fill="#090907"/>
-  <rect x="28" y="28" width="456" height="456" rx="72" fill="none" stroke="url(#brass)" stroke-width="22"/>
-  <path d="M118 330h276" fill="none" stroke="url(#brass)" stroke-linecap="round" stroke-width="34"/>
-  <path d="M152 330V142h116" fill="none" stroke="url(#brass)" stroke-linecap="round" stroke-linejoin="round" stroke-width="34"/>
-  <path d="M240 330V142h116" fill="none" stroke="url(#brass)" stroke-linecap="round" stroke-linejoin="round" stroke-width="34"/>
-  <path d="M360 142v188" fill="none" stroke="url(#brass)" stroke-linecap="round" stroke-width="34"/>
-  <path d="M152 238c31-38 65-56 104-56s73 18 104 56" fill="none" stroke="#f5ead2" stroke-linecap="round" stroke-width="22"/>
-  <path d="M152 394c31-24 65-36 104-36s73 12 104 36" fill="none" stroke="#f5ead2" stroke-linecap="round" stroke-width="22"/>
 </svg>
