@@ -43,30 +43,38 @@ function LogoMark({ className }: { className?: string }) {
         xmlns="http://www.w3.org/2000/svg"
       >
         <defs>
-          <pattern
-            id="brand-note-stripe"
-            width="18"
-            height="18"
-            patternTransform="rotate(35)"
-            patternUnits="userSpaceOnUse"
-          >
-            <rect width="18" height="18" fill="#002f6c" />
-            <rect x="7" width="7" height="18" fill="#c41e3a" />
-            <rect x="14" width="2" height="18" fill="#f5ead2" opacity="0.9" />
-          </pattern>
+          <linearGradient id="brand-note-fill" x1="14" x2="52" y1="48" y2="16">
+            <stop offset="0" stopColor="#c41e3a" />
+            <stop offset="0.48" stopColor="#21314d" />
+            <stop offset="1" stopColor="#002f6c" />
+          </linearGradient>
         </defs>
         <path
-          d="M38.5 9.5v32.2c0 7.5-6.6 12.8-14.3 12.8-6.2 0-10.8-3.5-10.8-8.7 0-6.1 5.8-10.4 13-10.4 2.4 0 4.8.5 6.8 1.4V17.2l17.1-4v7.1l-11.8 2.8Z"
-          fill="url(#brand-note-stripe)"
+          d="m31.5 6.8 6.8 15.1 16.2 1.9-12 11.1 3.2 16-14.2-8.2-14.1 8.2 3.1-16-12-11.1 16.2-1.9Z"
+          fill="rgba(9,9,7,0.84)"
           stroke="#f5ead2"
           strokeLinejoin="round"
-          strokeWidth="4.5"
+          strokeWidth="4.2"
         />
         <path
-          d="M33.2 18.8 50.3 15"
-          stroke="#080b12"
+          d="m31.5 6.8 6.8 15.1 16.2 1.9-12 11.1 3.2 16-14.2-8.2-14.1 8.2 3.1-16-12-11.1 16.2-1.9Z"
+          stroke="#d8b765"
+          strokeLinejoin="round"
+          strokeWidth="2.25"
+        />
+        <path
+          d="M41.4 16.9v24.3c0 6.1-5.5 10.4-12 10.4-5.2 0-9.1-2.9-9.1-7.1 0-5.1 5-8.7 11-8.7 2.2 0 4.1.4 5.8 1.2V22.2l11.7-2.7v5.1l-7.4 1.8Z"
+          fill="url(#brand-note-fill)"
+          stroke="#f5ead2"
+          strokeLinejoin="round"
+          strokeWidth="3.25"
+        />
+        <path
+          d="M40.2 29.5c3.9-4.6 8.1-6.9 12.8-7.2-3 2.1-4.9 4.8-5.7 8 2.7 1.4 5.5 3.5 8.1 6.3-5.7-1.9-10.6-1.3-14.7 1.8"
+          stroke="#d8b765"
           strokeLinecap="round"
-          strokeWidth="2.75"
+          strokeLinejoin="round"
+          strokeWidth="2.6"
         />
       </svg>
     </span>
