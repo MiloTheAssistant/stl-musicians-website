@@ -15,6 +15,7 @@ import { ButtonLink, Eyebrow, SectionShell } from "@/components/ui";
 import { getCase44DashboardBand } from "@/lib/band-dashboard";
 import { artistProfiles, events, promotionPackages } from "@/lib/content";
 import {
+  canAccessBandWorkspace,
   canAccessDashboardRole,
   getPrimaryEmail,
 } from "@/lib/dashboard-access";
@@ -70,17 +71,24 @@ export default async function RoleDashboardPage({
     notFound();
   }
 
+  let viewerEmail: string | null = null;
+
   if (hasClerkEnv) {
     const user = await currentUser();
+    viewerEmail = getPrimaryEmail(user);
 
-    if (!canAccessDashboardRole(role, getPrimaryEmail(user))) {
+    if (!canAccessDashboardRole(role, viewerEmail)) {
       notFound();
     }
   }
 
   const config = userRoles.find((item) => item.id === role);
   const case44Band = getCase44DashboardBand();
-  const musicianDashboardBand = role === "musician" ? case44Band : null;
+  const musicianDashboardBand =
+    role === "musician" &&
+    (!hasClerkEnv || canAccessBandWorkspace(case44Band.slug, viewerEmail))
+      ? case44Band
+      : null;
   const adminBandDirectory =
     role === "admin"
       ? [

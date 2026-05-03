@@ -1,3 +1,4 @@
+import { Show, SignOutButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { AudioLines, CalendarDays, MapPin, Music2 } from "lucide-react";
 import { ButtonLink } from "@/components/ui";
@@ -10,6 +11,8 @@ const navItems = [
 ];
 
 export function SiteHeader() {
+  const hasClerkEnv = Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY);
+
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--line)] bg-[rgba(17,17,15,0.88)] backdrop-blur">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
@@ -39,7 +42,30 @@ export function SiteHeader() {
           ))}
         </nav>
         <div className="flex items-center gap-2">
-          <ButtonLink href="/dashboard">Sign-Up / Sign-In</ButtonLink>
+          {hasClerkEnv ? (
+            <Show
+              when="signed-out"
+              fallback={
+                <>
+                  <ButtonLink href="/dashboard" variant="secondary">
+                    Dashboard
+                  </ButtonLink>
+                  <SignOutButton redirectUrl="/dashboard">
+                    <button
+                      className="inline-flex min-h-11 items-center justify-center rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.08)] px-4 py-2 text-sm font-bold text-[var(--foreground)] transition hover:bg-[rgba(245,234,210,0.14)] focus:outline-none focus:ring-2 focus:ring-[var(--brass-light)]"
+                      type="button"
+                    >
+                      Sign out
+                    </button>
+                  </SignOutButton>
+                </>
+              }
+            >
+              <ButtonLink href="/dashboard">Sign-Up / Sign-In</ButtonLink>
+            </Show>
+          ) : (
+            <ButtonLink href="/dashboard">Sign-Up / Sign-In</ButtonLink>
+          )}
         </div>
       </div>
     </header>

@@ -1,3 +1,4 @@
+import { Show, SignOutButton } from "@clerk/nextjs";
 import { isValidElement, type ReactNode } from "react";
 import { describe, expect, it } from "vitest";
 import { SiteHeader } from "./site-header";
@@ -47,10 +48,13 @@ function collectLinks(node: ReactNode): LinkMatch[] {
   return children;
 }
 
-function findElementByType(node: ReactNode, type: string): React.ReactElement<{ className?: string }> | undefined {
+function findElementByType<TProps extends { children?: ReactNode }>(
+  node: ReactNode,
+  type: string | unknown,
+): React.ReactElement<TProps> | undefined {
   if (Array.isArray(node)) {
     for (const child of node) {
-      const match = findElementByType(child, type);
+      const match = findElementByType<TProps>(child, type);
 
       if (match) {
         return match;
@@ -58,7 +62,7 @@ function findElementByType(node: ReactNode, type: string): React.ReactElement<{ 
     }
   }
 
-  if (!isValidElement<{ children?: ReactNode; className?: string }>(node)) {
+  if (!isValidElement<TProps>(node)) {
     return undefined;
   }
 
@@ -81,10 +85,39 @@ describe("SiteHeader", () => {
   });
 
   it("keeps the discovery navigation visible in the header", () => {
-    const nav = findElementByType(SiteHeader(), "nav");
+    const nav = findElementByType<{ children?: ReactNode; className?: string }>(SiteHeader(), "nav");
 
     expect(nav?.props.className).toContain("flex");
     expect(nav?.props.className).toContain("order-3");
     expect(nav?.props.className).not.toContain("hidden");
+  });
+
+  it("exposes dashboard and sign-out controls when signed in", () => {
+    const originalPublishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY = "pk_test_mock";
+
+    try {
+      const header = SiteHeader();
+      const show = findElementByType<{ children?: ReactNode; fallback?: ReactNode; when?: string }>(
+        header,
+        Show,
+      );
+      const signOutButton = findElementByType<{ children?: ReactNode; redirectUrl?: string }>(
+        show?.props.fallback,
+        SignOutButton,
+      );
+      const signedInLinks = collectLinks(show?.props.fallback);
+
+      expect(show?.props.when).toBe("signed-out");
+      expect(signedInLinks).toContainEqual({ href: "/dashboard", text: "Dashboard" });
+      expect(getText(show?.props.fallback)).toContain("Sign out");
+      expect(signOutButton?.props.redirectUrl).toBe("/dashboard");
+    } finally {
+      if (originalPublishableKey) {
+        process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY = originalPublishableKey;
+      } else {
+        delete process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+      }
+    }
   });
 });
