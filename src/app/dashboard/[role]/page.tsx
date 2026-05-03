@@ -140,7 +140,7 @@ export default async function RoleDashboardPage({
       {musicianDashboardBand && (
         <section className="mt-10 overflow-hidden rounded-lg border border-[var(--line)] bg-[var(--ink)]">
           <div className="grid gap-6 border-b border-[var(--line)] bg-[rgba(245,234,210,0.05)] p-5 lg:grid-cols-[180px_1fr_auto] lg:items-center">
-            <div className="flex min-h-32 items-center justify-center rounded-md border border-[rgba(212,175,74,0.35)] bg-black/70 p-4">
+            <div className="flex min-h-32 items-center justify-center rounded-md border border-[rgba(245,234,210,0.36)] bg-[var(--muted)] p-4">
               <Image
                 src={musicianDashboardBand.logoImage}
                 alt="Case44 band logo"
