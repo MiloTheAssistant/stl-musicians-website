@@ -1,24 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 240" role="img" aria-labelledby="title desc">
-  <title id="title">STL-Musicians.com logo</title>
-  <desc id="desc">A premium STL monogram and music-wave mark with a horizontal STL-Musicians.com wordmark.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 260" role="img" aria-labelledby="title desc">
+  <title id="title">STL-Musicians.Com logo</title>
+  <desc id="desc">A red and blue striped musical note with the STL-Musicians.Com wordmark and italic tagline.</desc>
   <defs>
-    <linearGradient id="brass" x1="0" x2="1" y1="0" y2="1">
-      <stop offset="0" stop-color="#f1d78a"/>
-      <stop offset=".48" stop-color="#d8b765"/>
-      <stop offset="1" stop-color="#b58b2a"/>
-    </linearGradient>
+    <pattern id="note-stripe" width="42" height="42" patternTransform="rotate(35)" patternUnits="userSpaceOnUse">
+      <rect width="42" height="42" fill="#002F6C"/>
+      <rect x="17" width="15" height="42" fill="#C41E3A"/>
+      <rect x="32" width="5" height="42" fill="#F5EAD2"/>
+    </pattern>
   </defs>
-  <rect width="240" height="240" rx="46" fill="#090907"/>
-  <rect x="13" y="13" width="214" height="214" rx="36" fill="none" stroke="url(#brass)" stroke-width="10"/>
-  <path d="M58 157h124" fill="none" stroke="url(#brass)" stroke-linecap="round" stroke-width="15"/>
-  <path d="M73 157V69h52" fill="none" stroke="url(#brass)" stroke-linecap="round" stroke-linejoin="round" stroke-width="15"/>
-  <path d="M112 157V69h52" fill="none" stroke="url(#brass)" stroke-linecap="round" stroke-linejoin="round" stroke-width="15"/>
-  <path d="M164 69v88" fill="none" stroke="url(#brass)" stroke-linecap="round" stroke-width="15"/>
-  <path d="M74 114c14-17 29-25 46-25s32 8 46 25" fill="none" stroke="#f5ead2" stroke-linecap="round" stroke-width="10"/>
-  <path d="M74 186c14-11 29-16 46-16s32 5 46 16" fill="none" stroke="#f5ead2" stroke-linecap="round" stroke-width="10"/>
-  <path d="M292 72h416" fill="none" stroke="url(#brass)" stroke-linecap="round" stroke-width="5"/>
-  <text x="292" y="136" fill="#f5ead2" font-family="Arial, Helvetica, sans-serif" font-size="58" font-weight="900" letter-spacing="3">STL-MUSICIANS</text>
-  <text x="292" y="183" fill="#d8b765" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" letter-spacing="5">ST. LOUIS MUSIC DISCOVERY</text>
-  <circle cx="915" cy="82" r="12" fill="url(#brass)"/>
-  <path d="M850 158c18-18 37-27 58-27s40 9 58 27" fill="none" stroke="url(#brass)" stroke-linecap="round" stroke-width="9"/>
+  <path d="M150 37v133c0 30-27 52-59 52-26 0-45-15-45-37 0-25 25-43 56-43 12 0 24 3 34 8V69l71-16v30l-57 13Z" fill="url(#note-stripe)" stroke="#080B12" stroke-width="20" stroke-linejoin="round"/>
+  <path d="M150 37v133c0 30-27 52-59 52-26 0-45-15-45-37 0-25 25-43 56-43 12 0 24 3 34 8V69l71-16v30l-57 13Z" fill="url(#note-stripe)" stroke="#F5EAD2" stroke-width="10" stroke-linejoin="round"/>
+  <path d="M135 73L207 57" stroke="#B58B2A" stroke-width="8" stroke-linecap="round"/>
+  <text x="268" y="118" fill="#F5EAD2" font-family="Arial, Helvetica, sans-serif" font-size="58" font-weight="900" letter-spacing=".5">STL-Musicians.Com</text>
+  <text x="270" y="166" fill="#C8B894" font-family="Arial, Helvetica, sans-serif" font-size="28" font-style="italic" font-weight="500">St. Louis music. One room. All night</text>
 </svg>

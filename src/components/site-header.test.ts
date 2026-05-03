@@ -79,8 +79,8 @@ describe("SiteHeader", () => {
     const logo = BrandLogo({ variant: "header" });
     const text = getText(logo);
 
-    expect(text).toContain("STL-Musicians.com");
-    expect(text).toContain("St. Louis music discovery");
+    expect(text).toContain("STL-Musicians.Com");
+    expect(text).toContain("St. Louis music. One room. All night");
     expect(text).not.toContain("STL MusiciansSt. Louis");
   });
 

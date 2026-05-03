@@ -1,23 +1,20 @@
-<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="512" height="512" rx="96" fill="#080B12"/>
-  <g clip-path="url(#tile)">
-    <path d="M0 0H512V512H0V0Z" fill="#002F6C"/>
-    <path d="M512 0V512H0L512 0Z" fill="#C41E3A"/>
-    <path d="M0 416L416 0H512L96 512H0V416Z" fill="#F5EAD2"/>
-    <path d="M0 488L488 0H512V42L42 512H0V488Z" fill="#B58B2A"/>
-  </g>
-  <rect x="22" y="22" width="468" height="468" rx="82" stroke="#F5EAD2" stroke-width="22"/>
-  <g filter="url(#shadow)">
-    <path d="M316 110V333C316 390 267 430 209 430C163 430 128 404 128 366C128 321 172 289 225 289C245 289 263 293 278 300V178L384 153V104L316 110Z" fill="#F5EAD2"/>
-    <path d="M316 110V333C316 390 267 430 209 430C163 430 128 404 128 366C128 321 172 289 225 289C245 289 263 293 278 300V178L384 153V104L316 110Z" stroke="#080B12" stroke-width="18" stroke-linejoin="round"/>
-  </g>
-  <path d="M278 184L384 159" stroke="#002F6C" stroke-width="18" stroke-linecap="round"/>
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">STL-Musicians.Com note mark</title>
+  <desc id="desc">A striped musical note mark in St. Louis blue, red, cream, and brass.</desc>
   <defs>
-    <clipPath id="tile">
-      <rect width="512" height="512" rx="96"/>
-    </clipPath>
-    <filter id="shadow" x="86" y="70" width="340" height="402" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-      <feDropShadow dx="0" dy="14" stdDeviation="12" flood-color="#080B12" flood-opacity="0.42"/>
+    <pattern id="note-stripe" width="76" height="76" patternTransform="rotate(35)" patternUnits="userSpaceOnUse">
+      <rect width="76" height="76" fill="#002F6C"/>
+      <rect x="31" width="28" height="76" fill="#C41E3A"/>
+      <rect x="59" width="9" height="76" fill="#F5EAD2"/>
+    </pattern>
+    <filter id="shadow" x="20" y="4" width="472" height="506" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feDropShadow dx="0" dy="18" stdDeviation="14" flood-color="#080B12" flood-opacity="0.44"/>
     </filter>
   </defs>
+  <g filter="url(#shadow)">
+    <path d="M309 72V330C309 389 257 431 195 431C145 431 108 403 108 361C108 312 156 277 215 277C239 277 261 282 280 292V133L417 102V160L309 185Z" fill="url(#note-stripe)" stroke="#080B12" stroke-width="42" stroke-linejoin="round"/>
+    <path d="M309 72V330C309 389 257 431 195 431C145 431 108 403 108 361C108 312 156 277 215 277C239 277 261 282 280 292V133L417 102V160L309 185Z" fill="url(#note-stripe)" stroke="#F5EAD2" stroke-width="22" stroke-linejoin="round"/>
+    <path d="M279 141L417 110" stroke="#B58B2A" stroke-width="18" stroke-linecap="round"/>
+    <path d="M279 173L417 142" stroke="#F5EAD2" stroke-width="8" stroke-linecap="round" opacity=".88"/>
+  </g>
 </svg>
