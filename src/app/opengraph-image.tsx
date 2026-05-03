@@ -42,7 +42,7 @@ export default function Image() {
               STL-Musicians.com
             </div>
             <div style={{ fontSize: 36, color: "#c8b894" }}>
-              Where St. Louis music gets discovered, promoted, and booked.
+              Where St. Louis musicians, venues, and fans connect.
             </div>
           </div>
         </div>

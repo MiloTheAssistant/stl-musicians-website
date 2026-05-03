@@ -5,8 +5,8 @@ export const siteConfig = {
   codename: "StageLink STL",
   url: "https://stl-musicians.com",
   description:
-    "Where St. Louis music gets discovered, promoted, and booked.",
-  tagline: "Where St. Louis music gets discovered, promoted, and booked.",
+    "Where St. Louis musicians, venues, and fans connect.",
+  tagline: "Where St. Louis musicians, venues, and fans connect.",
   email: "hello@stl-musicians.com",
 };
 

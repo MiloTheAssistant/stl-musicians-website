@@ -4,7 +4,7 @@ import { venues } from "@/lib/content";
 
 export const metadata = {
   title: "Venues",
-  description: "St. Louis rooms, small venues, and event spaces for live music.",
+  description: "Every St. Louis stage starts with the right connection.",
 };
 
 export default function VenuesPage() {
@@ -13,7 +13,9 @@ export default function VenuesPage() {
       <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
         <div>
           <Eyebrow>Rooms and Buyers</Eyebrow>
-          <h1 className="mt-3 text-5xl font-black">Rooms that need the right sound.</h1>
+          <h1 className="mt-3 max-w-4xl text-5xl font-black">
+            Every St. Louis stage starts with the right connection.
+          </h1>
           <p className="mt-4 max-w-2xl text-[var(--muted)]">
             Venue listings start simple and evolve into direct booking, reviews,
             recurring needs, and event staffing workflows.

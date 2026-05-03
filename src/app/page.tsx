@@ -43,7 +43,7 @@ export default function Home() {
           <div className="max-w-3xl lg:col-start-2">
             <Eyebrow>StageLink STL / Launch Platform</Eyebrow>
             <h1 className="mt-5 text-5xl font-black leading-[0.94] text-[var(--foreground)] sm:text-7xl lg:text-8xl">
-              Where St. Louis music gets discovered, promoted, and booked.
+              Where St. Louis musicians, venues, and fans connect.
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-[var(--muted)]">
               A serious local music hub for musicians, bands, promoters, small
@@ -74,7 +74,9 @@ export default function Home() {
         <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-center">
           <div>
             <Eyebrow>Discovery Engine</Eyebrow>
-            <h2 className="mt-3 text-4xl font-black">Built around the actual scene.</h2>
+            <h2 className="mt-3 text-4xl font-black">
+              The St. Louis music scene, all in one place.
+            </h2>
             <p className="mt-4 text-[var(--muted)]">
               Search-ready genre coverage, launch-ready profiles, event listings,
               and role-specific portals give the site a real product spine from day one.
@@ -157,6 +159,12 @@ export default function Home() {
       </section>
 
       <SectionShell>
+        <div className="mb-8 max-w-3xl">
+          <Eyebrow>Find / Connect / Promote</Eyebrow>
+          <h2 className="mt-3 text-4xl font-black">
+            Find the sound. Book the room. Build the scene.
+          </h2>
+        </div>
         <div className="grid gap-6 lg:grid-cols-3">
           {[
             [Search, "Find", "Search musicians by genre, room fit, home base, media, and event style."],
@@ -186,6 +194,9 @@ export default function Home() {
             <div className="p-6">
               <CalendarDays className="size-6 text-[var(--brass-light)]" aria-hidden />
               <h2 className="mt-4 text-3xl font-black">Upcoming STL signals</h2>
+              <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+                Discover the artists, rooms, and shows moving St. Louis.
+              </p>
               <div className="mt-5 space-y-4">
                 {events.slice(0, 3).map((event) => (
                   <div key={event.title} className="border-t border-[var(--line)] pt-4">
@@ -219,7 +230,9 @@ export default function Home() {
         <SectionShell className="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <Sparkles className="size-6 text-[var(--brass-light)]" aria-hidden />
-            <h2 className="mt-3 text-3xl font-black">Ready to wire up the scene?</h2>
+            <h2 className="mt-3 text-3xl font-black">
+              Every St. Louis stage starts with the right connection.
+            </h2>
             <p className="mt-2 text-[var(--muted)]">{siteConfig.description}</p>
           </div>
           <ButtonLink href="/sign-up">Create an account</ButtonLink>

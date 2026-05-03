@@ -4,14 +4,16 @@ import { events } from "@/lib/content";
 
 export const metadata = {
   title: "Events",
-  description: "Upcoming St. Louis music events and featured listings.",
+  description: "Discover the artists, rooms, and shows moving St. Louis.",
 };
 
 export default function EventsPage() {
   return (
     <SectionShell>
       <Eyebrow>Event Calendar</Eyebrow>
-      <h1 className="mt-3 text-5xl font-black">What is moving through STL next.</h1>
+      <h1 className="mt-3 max-w-4xl text-5xl font-black">
+        Discover the artists, rooms, and shows moving St. Louis.
+      </h1>
       <div className="mt-10 grid gap-5">
         {events.map((event) => (
           <article key={event.title} className="grid gap-5 rounded-lg border border-[var(--line)] bg-[rgba(245,234,210,0.06)] p-5 md:grid-cols-[auto_1fr_auto] md:items-center">
