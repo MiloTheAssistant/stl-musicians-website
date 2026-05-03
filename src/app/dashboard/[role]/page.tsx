@@ -1,17 +1,24 @@
 import { currentUser } from "@clerk/nextjs/server";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import {
+  BarChart3,
+  Bot,
   CalendarPlus,
   CheckCircle2,
+  CreditCard,
   ExternalLink,
+  Globe2,
   Mail,
   Megaphone,
   Music2,
+  Package,
+  ReceiptText,
   Search,
   ShieldCheck,
   Star,
 } from "lucide-react";
-import { ButtonLink, Eyebrow, SectionShell } from "@/components/ui";
+import { ButtonLink, Eyebrow, SectionShell, Tag } from "@/components/ui";
 import { getCase44DashboardBand } from "@/lib/band-dashboard";
 import { artistProfiles, events, promotionPackages } from "@/lib/content";
 import {
@@ -20,6 +27,11 @@ import {
   getPrimaryEmail,
 } from "@/lib/dashboard-access";
 import { isKnownRole, userRoles } from "@/lib/roles";
+import {
+  getPlanById,
+  paymentArchitecture,
+  storageArchitecture,
+} from "@/lib/subscription-plans";
 
 const dashboardCards = {
   musician: [
@@ -89,6 +101,9 @@ export default async function RoleDashboardPage({
     (!hasClerkEnv || canAccessBandWorkspace(case44Band.slug, viewerEmail))
       ? case44Band
       : null;
+  const activePlan = musicianDashboardBand
+    ? getPlanById(musicianDashboardBand.activePlanId)
+    : null;
   const adminBandDirectory =
     role === "admin"
       ? [
@@ -114,43 +129,225 @@ export default async function RoleDashboardPage({
           <h1 className="mt-3 text-5xl font-black">{config.headline}</h1>
           <p className="mt-4 max-w-2xl text-[var(--muted)]">{config.description}</p>
         </div>
-        <ButtonLink href={`/login/${role}`}>Account entry</ButtonLink>
+        <div className="rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.06)] px-4 py-3 text-sm">
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-[var(--brass-light)]">
+            Account
+          </p>
+          <p className="mt-1 font-bold">Workspace access</p>
+          <p className="text-[var(--muted)]">Signed in dashboard session</p>
+        </div>
       </div>
       {musicianDashboardBand && (
         <section className="mt-10 overflow-hidden rounded-lg border border-[var(--line)] bg-[var(--ink)]">
-          <div className="flex flex-col gap-5 border-b border-[var(--line)] bg-[rgba(245,234,210,0.05)] p-5 lg:flex-row lg:items-center lg:justify-between">
+          <div className="grid gap-6 border-b border-[var(--line)] bg-[rgba(245,234,210,0.05)] p-5 lg:grid-cols-[180px_1fr_auto] lg:items-center">
+            <div className="flex min-h-32 items-center justify-center rounded-md border border-[rgba(212,175,74,0.35)] bg-black/70 p-4">
+              <Image
+                src={musicianDashboardBand.logoImage}
+                alt="Case44 band logo"
+                width={360}
+                height={160}
+                className="h-auto w-full object-contain"
+                priority
+              />
+            </div>
             <div>
-              <Eyebrow>Published Band Website</Eyebrow>
-              <h2 className="mt-2 text-3xl font-black">{musicianDashboardBand.name} Website</h2>
+              <Eyebrow>Case44 Workspace</Eyebrow>
+              <h2 className="mt-2 text-3xl font-black">
+                Administer {musicianDashboardBand.name} on STL-Musicians.com
+              </h2>
               <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
                 {musicianDashboardBand.description}
               </p>
-              <div className="mt-3 flex flex-wrap gap-2 text-xs font-semibold text-[var(--brass-light)]">
+              <div className="mt-4 flex flex-wrap gap-2 text-xs font-semibold text-[var(--brass-light)]">
                 <span>{musicianDashboardBand.genre}</span>
                 <span aria-hidden>/</span>
                 <span>{musicianDashboardBand.location}</span>
+                {activePlan && (
+                  <>
+                    <span aria-hidden>/</span>
+                    <span>{activePlan.name}</span>
+                  </>
+                )}
               </div>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <ButtonLink href={musicianDashboardBand.websiteUrl} target="_blank" rel="noreferrer" variant="secondary">
-                Open website
-              </ButtonLink>
-              <ButtonLink href={musicianDashboardBand.repoUrl} target="_blank" rel="noreferrer" variant="ghost">
+              <ButtonLink
+                href={musicianDashboardBand.websiteUrl}
+                target="_blank"
+                rel="noreferrer"
+                variant="secondary"
+              >
                 <span className="inline-flex items-center gap-2">
-                  GitHub repo
+                  Open public website
                   <ExternalLink className="size-4" aria-hidden />
+                </span>
+              </ButtonLink>
+              <ButtonLink href="#merch">
+                <span className="inline-flex items-center gap-2">
+                  Edit Products
+                  <Package className="size-4" aria-hidden />
                 </span>
               </ButtonLink>
             </div>
           </div>
-          <div className="bg-[rgba(9,9,7,0.55)] p-3 sm:p-5">
-            <iframe
-              title="Case44 published website preview"
-              src={musicianDashboardBand.websiteUrl}
-              className="h-[72vh] min-h-[520px] w-full rounded-md border border-[var(--line)] bg-black"
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-            />
+          <div className="p-5">
+            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+              {musicianDashboardBand.navigation.map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  className="rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.04)] p-4 transition hover:bg-[rgba(245,234,210,0.08)]"
+                >
+                  <p className="font-bold">{item.label}</p>
+                  <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+                    {item.description}
+                  </p>
+                </a>
+              ))}
+            </div>
+
+            <div className="mt-6 grid gap-4 md:grid-cols-3">
+              {musicianDashboardBand.stats.map((stat) => (
+                <article
+                  key={stat.label}
+                  className="rounded-md border border-[var(--line)] bg-[rgba(9,9,7,0.35)] p-5"
+                >
+                  <BarChart3 className="size-5 text-[var(--brass-light)]" aria-hidden />
+                  <p className="mt-4 text-sm text-[var(--muted)]">{stat.label}</p>
+                  <p className="mt-1 text-4xl font-black">{stat.value}</p>
+                  <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+                    {stat.detail}
+                  </p>
+                </article>
+              ))}
+            </div>
+
+            <div className="mt-6 grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
+              <section
+                id="events"
+                className="rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.04)] p-5"
+              >
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <Eyebrow>Calendar</Eyebrow>
+                    <h3 className="mt-2 text-2xl font-black">Next 14 Days</h3>
+                  </div>
+                  <ButtonLink href="#calendar" variant="ghost">
+                    Drill into calendar
+                  </ButtonLink>
+                </div>
+                <div className="mt-5 divide-y divide-[var(--line)]">
+                  {musicianDashboardBand.upcomingEvents.map((event) => (
+                    <div
+                      key={`${event.date}-${event.title}`}
+                      className="grid gap-3 py-4 md:grid-cols-[0.7fr_1fr_auto] md:items-center"
+                    >
+                      <div>
+                        <p className="font-bold">{event.date}</p>
+                        <p className="text-sm text-[var(--muted)]">{event.time}</p>
+                      </div>
+                      <div>
+                        <p className="font-bold">{event.title}</p>
+                        <p className="text-sm text-[var(--muted)]">{event.venue}</p>
+                      </div>
+                      <Tag>{event.status}</Tag>
+                    </div>
+                  ))}
+                </div>
+              </section>
+
+              <section
+                id="social"
+                className="rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.04)] p-5"
+              >
+                <Eyebrow>Connected Impact</Eyebrow>
+                <h3 className="mt-2 text-2xl font-black">Social Media Impact</h3>
+                <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                  {musicianDashboardBand.socialImpact.map((item) => (
+                    <div
+                      key={item.channel}
+                      className="rounded-md bg-[rgba(9,9,7,0.4)] p-4"
+                    >
+                      <p className="text-sm text-[var(--muted)]">{item.channel}</p>
+                      <p className="mt-1 text-2xl font-black">{item.value}</p>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            </div>
+
+            <div className="mt-6 grid gap-6 xl:grid-cols-3">
+              <section
+                id="billing"
+                className="rounded-md border border-[var(--line)] bg-[rgba(33,49,77,0.25)] p-5"
+              >
+                <CreditCard className="size-5 text-[var(--brass-light)]" aria-hidden />
+                <h3 className="mt-4 text-2xl font-black">Billing</h3>
+                <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+                  {activePlan?.summary}
+                </p>
+                <div className="mt-4 space-y-2 text-sm text-[var(--muted)]">
+                  <p>
+                    <strong className="text-[var(--foreground)]">Subscriptions:</strong>{" "}
+                    {paymentArchitecture.subscriptionProcessor}
+                  </p>
+                  <p>
+                    <strong className="text-[var(--foreground)]">Platform payments:</strong>{" "}
+                    {paymentArchitecture.marketplaceProcessor}
+                  </p>
+                </div>
+              </section>
+
+              <section
+                id="merch"
+                className="rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.04)] p-5"
+              >
+                <Package className="size-5 text-[var(--brass-light)]" aria-hidden />
+                <h3 className="mt-4 text-2xl font-black">Merch</h3>
+                <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+                  Edit products, images, sizes, pricing, and availability before
+                  connecting checkout or fulfillment.
+                </p>
+                <ButtonLink href="#products" className="mt-5" variant="secondary">
+                  Edit Products
+                </ButtonLink>
+              </section>
+
+              <section
+                id="help"
+                className="rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.04)] p-5"
+              >
+                <Bot className="size-5 text-[var(--brass-light)]" aria-hidden />
+                <h3 className="mt-4 text-2xl font-black">Help</h3>
+                <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+                  The assistant drawer will answer plan questions, navigation tips,
+                  and next-step recommendations once the core workspace is stable.
+                </p>
+              </section>
+            </div>
+
+            <div className="mt-6 grid gap-6 lg:grid-cols-2">
+              <section
+                id="website"
+                className="rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.04)] p-5"
+              >
+                <Globe2 className="size-5 text-[var(--brass-light)]" aria-hidden />
+                <h3 className="mt-4 text-2xl font-black">Website Controls</h3>
+                <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+                  Public website review stays available, but the dashboard is now
+                  the command center for STL-Musicians features.
+                </p>
+              </section>
+              <section className="rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.04)] p-5">
+                <ReceiptText className="size-5 text-[var(--brass-light)]" aria-hidden />
+                <h3 className="mt-4 text-2xl font-black">Storage Foundation</h3>
+                <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
+                  {storageArchitecture.relationalStore} stores account, campaign,
+                  booking, product, and payment records. {storageArchitecture.fileStore}
+                  {" "}stores photos, merch images, EPKs, and social media assets.
+                </p>
+              </section>
+            </div>
           </div>
         </section>
       )}

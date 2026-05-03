@@ -36,8 +36,36 @@ function collectElements(node: ReactNode, type: string): ReactElement[] {
   return children;
 }
 
+function collectElementsWithProp(
+  node: ReactNode,
+  propName: string,
+  propValue: string,
+): ReactElement[] {
+  if (Array.isArray(node)) {
+    return node.flatMap((child) =>
+      collectElementsWithProp(child, propName, propValue),
+    );
+  }
+
+  if (!isValidElement<Record<string, unknown> & { children?: ReactNode }>(node)) {
+    return [];
+  }
+
+  const children = collectElementsWithProp(
+    node.props.children,
+    propName,
+    propValue,
+  );
+
+  if (node.props[propName] === propValue) {
+    return [node, ...children];
+  }
+
+  return children;
+}
+
 describe("RoleDashboardPage", () => {
-  it("publishes the Case44 website inside the musician dashboard", async () => {
+  it("presents Case44 as a musician workspace without developer-only links", async () => {
     const page = await RoleDashboardPage({
       params: Promise.resolve({ role: "musician" }),
     });
@@ -45,14 +73,17 @@ describe("RoleDashboardPage", () => {
     const iframes = collectElements(page, "iframe");
 
     expect(text).toContain("Musician / Band");
-    expect(text).toContain("Published Band Website");
-    expect(text).toContain("Case44 Website");
-    expect(text).toContain("GitHub repo");
-    expect(iframes).toHaveLength(1);
-    expect(iframes[0].props).toMatchObject({
-      title: "Case44 published website preview",
-      src: "https://case44.vercel.app",
-    });
+    expect(text).toContain("Case44 Workspace");
+    expect(text).toContain("Songs Promoted");
+    expect(text).toContain("Social Media Impact");
+    expect(text).toContain("Next 14 Days");
+    expect(text).toContain("Edit Products");
+    expect(text).toContain("Billing");
+    expect(text).toContain("Song Tier");
+    expect(text).not.toContain("GitHub repo");
+    expect(text).not.toContain("Account entry");
+    expect(collectElementsWithProp(page, "alt", "Case44 band logo")).toHaveLength(1);
+    expect(iframes).toHaveLength(0);
   });
 
   it("does not show the Case44 website preview for other dashboards", async () => {
@@ -60,7 +91,7 @@ describe("RoleDashboardPage", () => {
       params: Promise.resolve({ role: "promoter" }),
     });
 
-    expect(getText(page)).not.toContain("Published Band Website");
+    expect(getText(page)).not.toContain("Case44 Workspace");
     expect(collectElements(page, "iframe")).toHaveLength(0);
   });
 

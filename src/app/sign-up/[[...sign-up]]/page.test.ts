@@ -1,7 +1,7 @@
-import { SignIn } from "@clerk/nextjs";
+import { SignUp } from "@clerk/nextjs";
 import { isValidElement, type ReactElement, type ReactNode } from "react";
 import { describe, expect, it } from "vitest";
-import SignInPage from "./page";
+import SignUpPage from "./page";
 
 function findElementByType(node: ReactNode, type: unknown): ReactElement | undefined {
   if (Array.isArray(node)) {
@@ -25,8 +25,8 @@ function findElementByType(node: ReactNode, type: unknown): ReactElement | undef
   return findElementByType(node.props.children, type);
 }
 
-describe("SignInPage", () => {
-  it("sends local musician sign-in attempts back to the accessible dashboard when Clerk is not configured", async () => {
+describe("SignUpPage", () => {
+  it("sends local musician sign-up attempts back to the accessible dashboard when Clerk is not configured", async () => {
     const originalPublishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
     const originalSecretKey = process.env.CLERK_SECRET_KEY;
     delete process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
@@ -34,7 +34,7 @@ describe("SignInPage", () => {
 
     try {
       await expect(
-        SignInPage({
+        SignUpPage({
           searchParams: Promise.resolve({ role: "musician" }),
         } as never),
       ).rejects.toThrow("NEXT_REDIRECT");
@@ -48,19 +48,19 @@ describe("SignInPage", () => {
     }
   });
 
-  it("sends a musician role sign-in to the musician dashboard", async () => {
+  it("sends a musician role sign-up to the musician dashboard", async () => {
     const originalPublishableKey = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
     const originalSecretKey = process.env.CLERK_SECRET_KEY;
     process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY = "pk_test_mock";
     process.env.CLERK_SECRET_KEY = "sk_test_mock";
 
     try {
-      const page = await SignInPage({
+      const page = await SignUpPage({
         searchParams: Promise.resolve({ role: "musician" }),
       } as never);
-      const signIn = findElementByType(page, SignIn);
+      const signUp = findElementByType(page, SignUp);
 
-      expect(signIn?.props).toMatchObject({
+      expect(signUp?.props).toMatchObject({
         fallbackRedirectUrl: "/dashboard/musician",
         forceRedirectUrl: "/dashboard/musician",
       });
