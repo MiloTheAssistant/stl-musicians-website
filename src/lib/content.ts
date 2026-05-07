@@ -3,11 +3,15 @@ import type { UserRoleId } from "./roles";
 export const siteConfig = {
   name: "STL-Musicians.com",
   codename: "StageLink STL",
+  legalOperator: "Digital Energy Holdings, LLC",
   url: "https://stl-musicians.com",
   description:
     "Where St. Louis musicians, venues, and fans connect.",
   tagline: "Where St. Louis musicians, venues, and fans connect.",
-  email: "hello@stl-musicians.com",
+  email: "contact@stl-musicians.com",
+  phone: "(573) 500-0064",
+  phoneHref: "tel:+15735000064",
+  location: "St. Louis, MO",
 };
 
 export const coreGenres = [

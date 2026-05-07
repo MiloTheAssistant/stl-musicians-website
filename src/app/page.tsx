@@ -140,16 +140,18 @@ export default function Home() {
             {authPortals.map((portal) => (
               <article
                 key={portal.role}
-                className="rounded-lg border border-[var(--line)] bg-[rgba(9,9,7,0.78)] p-5 shadow-xl backdrop-blur"
+                className="flex min-h-72 flex-col rounded-lg border border-[var(--line)] bg-[rgba(9,9,7,0.78)] p-5 shadow-xl backdrop-blur"
               >
                 <Users className="size-5 text-[var(--brass-light)]" aria-hidden />
-                <h3 className="mt-4 text-xl font-black">{portal.title}</h3>
+                <h3 className="mt-4 min-h-14 text-balance text-lg font-black leading-tight">
+                  {portal.title}
+                </h3>
                 <ul className="mt-4 space-y-2 text-sm text-[var(--muted)]">
                   {portal.proofPoints.map((point) => (
                     <li key={point}>{point}</li>
                   ))}
                 </ul>
-                <ButtonLink href={portal.href} className="mt-5 w-full">
+                <ButtonLink href={portal.href} className="mt-auto w-full">
                   {portal.cta}
                 </ButtonLink>
               </article>
