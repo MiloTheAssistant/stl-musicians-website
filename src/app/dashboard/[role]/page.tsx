@@ -26,12 +26,17 @@ import {
   canAccessDashboardRole,
   getPrimaryEmail,
 } from "@/lib/dashboard-access";
+import {
+  getBillingSummaryForUser,
+  getPaymentOperationsSummary,
+} from "@/lib/payment-records";
 import { isKnownRole, userRoles } from "@/lib/roles";
 import {
   getPlanById,
   paymentArchitecture,
   storageArchitecture,
 } from "@/lib/subscription-plans";
+import { createCustomerPortalSession } from "@/app/pricing/actions";
 
 const dashboardCards = {
   musician: [
@@ -84,9 +89,11 @@ export default async function RoleDashboardPage({
   }
 
   let viewerEmail: string | null = null;
+  let viewerClerkUserId: string | null = null;
 
   if (hasClerkEnv) {
     const user = await currentUser();
+    viewerClerkUserId = user?.id ?? null;
     viewerEmail = getPrimaryEmail(user);
 
     if (!canAccessDashboardRole(role, viewerEmail)) {
@@ -104,6 +111,11 @@ export default async function RoleDashboardPage({
   const activePlan = musicianDashboardBand
     ? getPlanById(musicianDashboardBand.activePlanId)
     : null;
+  const billingSummary = musicianDashboardBand
+    ? await getBillingSummaryForUser(viewerClerkUserId)
+    : null;
+  const paymentOperations =
+    role === "admin" ? await getPaymentOperationsSummary() : null;
   const adminBandDirectory =
     role === "admin"
       ? [
@@ -291,6 +303,19 @@ export default async function RoleDashboardPage({
                 </p>
                 <div className="mt-4 space-y-2 text-sm text-[var(--muted)]">
                   <p>
+                    <strong className="text-[var(--foreground)]">Current plan:</strong>{" "}
+                    {billingSummary?.status === "trial" && activePlan
+                      ? activePlan.name
+                      : billingSummary?.planName}
+                  </p>
+                  <p>
+                    <strong className="text-[var(--foreground)]">Billing status:</strong>{" "}
+                    {billingSummary?.status}
+                    {billingSummary?.billingInterval
+                      ? ` / ${billingSummary.billingInterval}`
+                      : ""}
+                  </p>
+                  <p>
                     <strong className="text-[var(--foreground)]">Subscriptions:</strong>{" "}
                     {paymentArchitecture.subscriptionProcessor}
                   </p>
@@ -299,6 +324,16 @@ export default async function RoleDashboardPage({
                     {paymentArchitecture.marketplaceProcessor}
                   </p>
                 </div>
+                {billingSummary?.canManageBilling && (
+                  <form action={createCustomerPortalSession} className="mt-5">
+                    <button
+                      type="submit"
+                      className="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-[var(--brass)] px-4 py-2 text-sm font-bold text-[var(--ink)] transition hover:bg-[var(--brass-light)] focus:outline-none focus:ring-2 focus:ring-[var(--brass-light)]"
+                    >
+                      Manage billing
+                    </button>
+                  </form>
+                )}
               </section>
 
               <section
@@ -376,6 +411,43 @@ export default async function RoleDashboardPage({
                 <p className="text-xs font-bold uppercase text-[var(--brass-light)]">{artist.status}</p>
               </div>
             ))}
+          </div>
+        </section>
+      )}
+      {paymentOperations && (
+        <section className="mt-10 rounded-lg border border-[var(--line)] bg-[rgba(33,49,77,0.25)] p-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <Eyebrow>Payment Operations</Eyebrow>
+              <h2 className="mt-2 text-3xl font-black">Billing and Promotion Status</h2>
+            </div>
+            <Tag>Stripe</Tag>
+          </div>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <article className="rounded-md border border-[var(--line)] bg-[rgba(9,9,7,0.35)] p-4">
+              <p className="text-sm text-[var(--muted)]">Active subscriptions</p>
+              <p className="mt-2 text-3xl font-black">
+                {paymentOperations.activeSubscriptions}
+              </p>
+            </article>
+            <article className="rounded-md border border-[var(--line)] bg-[rgba(9,9,7,0.35)] p-4">
+              <p className="text-sm text-[var(--muted)]">Needs attention</p>
+              <p className="mt-2 text-3xl font-black">
+                {paymentOperations.attentionSubscriptions}
+              </p>
+            </article>
+            <article className="rounded-md border border-[var(--line)] bg-[rgba(9,9,7,0.35)] p-4">
+              <p className="text-sm text-[var(--muted)]">Paid promotions</p>
+              <p className="mt-2 text-3xl font-black">
+                {paymentOperations.paidPromotions}
+              </p>
+            </article>
+            <article className="rounded-md border border-[var(--line)] bg-[rgba(9,9,7,0.35)] p-4">
+              <p className="text-sm text-[var(--muted)]">Pending promotions</p>
+              <p className="mt-2 text-3xl font-black">
+                {paymentOperations.pendingPromotions}
+              </p>
+            </article>
           </div>
         </section>
       )}

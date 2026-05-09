@@ -30,6 +30,41 @@ npm run typecheck
 npm run build
 ```
 
+## Stripe Payments
+
+Phase A payments use Stripe Checkout for subscriptions and paid promotions, plus
+Stripe webhooks for fulfillment.
+
+Required local and Vercel environment variables:
+
+```bash
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_SECRET=
+STRIPE_PRICE_SONG_MONTHLY=
+STRIPE_PRICE_SONG_YEARLY=
+STRIPE_PRICE_ALBUM_MONTHLY=
+STRIPE_PRICE_ALBUM_YEARLY=
+```
+
+Configure the Stripe webhook endpoint to:
+
+```text
+https://stl-musicians.com/api/webhook/stripe
+```
+
+For local webhook testing on the reserved primary dev port:
+
+```bash
+npm run dev -- --hostname 127.0.0.1 --port 3006
+stripe listen --forward-to http://127.0.0.1:3006/api/webhook/stripe
+```
+
+Apply the Neon schema before using checkout in production:
+
+```bash
+npm run db:push
+```
+
 ## Stack
 
 - Next.js App Router

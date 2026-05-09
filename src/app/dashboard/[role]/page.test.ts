@@ -80,6 +80,8 @@ describe("RoleDashboardPage", () => {
     expect(text).toContain("Edit Products");
     expect(text).toContain("Billing");
     expect(text).toContain("Song Tier");
+    expect(text).toContain("Current plan:");
+    expect(text).toContain("Billing status:");
     expect(text).not.toContain("GitHub repo");
     expect(text).not.toContain("Account entry");
     expect(collectElementsWithProp(page, "alt", "Case44 band logo")).toHaveLength(1);
@@ -109,5 +111,9 @@ describe("RoleDashboardPage", () => {
     expect(text).toContain("Arc Light Saints");
     expect(text).toContain("Blue Hour Confessional");
     expect(text).toContain("Lo-Fi Arch Session");
+    expect(text).toContain("Payment Operations");
+    expect(text).toContain("Billing and Promotion Status");
+    expect(text).toContain("Active subscriptions");
+    expect(text).toContain("Paid promotions");
   });
 });
