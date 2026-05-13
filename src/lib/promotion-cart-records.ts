@@ -1,5 +1,6 @@
 import { and, desc, eq, isNull } from "drizzle-orm";
 import type Stripe from "stripe";
+import { hasDatabaseUrl } from "@/db/env";
 import { getDb } from "@/db";
 import {
   promotionCartItems,
@@ -23,7 +24,7 @@ export type PromotionCartScope = {
 export type PromotionCartRecord = typeof promotionCarts.$inferSelect;
 
 export function hasPromotionCartDatabase() {
-  return Boolean(process.env.DATABASE_URL);
+  return hasDatabaseUrl();
 }
 
 function normalizedCampaignId(campaignId: string | null | undefined) {

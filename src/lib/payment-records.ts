@@ -1,5 +1,6 @@
 import { desc, eq } from "drizzle-orm";
 import type Stripe from "stripe";
+import { hasDatabaseUrl } from "@/db/env";
 import { getDb } from "@/db";
 import {
   promotionCampaigns,
@@ -49,7 +50,7 @@ export type PaymentOperationsSummary = {
 };
 
 function hasDatabase() {
-  return Boolean(process.env.DATABASE_URL);
+  return hasDatabaseUrl();
 }
 
 function toDateFromStripeSeconds(value: unknown) {
