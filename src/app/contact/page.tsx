@@ -5,6 +5,9 @@ import { siteConfig } from "@/lib/content";
 export const metadata = {
   title: "Contact",
   description: "Contact STL-Musicians.com.",
+  alternates: {
+    canonical: "/contact",
+  },
 };
 
 export default function ContactPage() {

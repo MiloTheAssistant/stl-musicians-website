@@ -1,0 +1,34 @@
+# STL-Musicians.com
+
+> STL-Musicians.com is a St. Louis music discovery and promotion platform connecting musicians, bands, venues, promoters, small venues, and fans.
+
+## Core Pages
+
+- [Home](https://stl-musicians.com/): Overview of the St. Louis music discovery platform and launch portals.
+- [Musicians](https://stl-musicians.com/musicians): Browse featured St. Louis artist and band profiles by genre, home base, media, and booking focus.
+- [Events](https://stl-musicians.com/events): Upcoming St. Louis music event and showcase listings.
+- [Venues](https://stl-musicians.com/venues): Local venue discovery and room-fit context for the St. Louis music ecosystem.
+- [About](https://stl-musicians.com/about): Platform background, purpose, and St. Louis market focus.
+- [Contact](https://stl-musicians.com/contact): Contact path for musicians, venues, promoters, and platform inquiries.
+- [Pricing](https://stl-musicians.com/pricing): Subscription and paid promotion options for working musicians.
+
+## Artist Profiles
+
+- [Riverfront Brass Union](https://stl-musicians.com/musicians/riverfront-brass-union): Jazz collective based in Soulard.
+- [North Side Current](https://stl-musicians.com/musicians/north-side-current): Hip-Hop project based in North City.
+- [Red Clay Revival](https://stl-musicians.com/musicians/red-clay-revival): Country project based in Metro East.
+- [Arc Light Saints](https://stl-musicians.com/musicians/arc-light-saints): Rock band based in The Grove.
+- [Blue Hour Confessional](https://stl-musicians.com/musicians/blue-hour-confessional): Blues act based in Benton Park.
+- [Lo-Fi Arch Session](https://stl-musicians.com/musicians/lofi-arch-session): EDM / DJ project based in Downtown West.
+
+## Contact
+
+- Email: contact@stl-musicians.com
+- Phone: (573) 500-0064
+- Location: St. Louis, MO
+
+## Notes For AI Agents
+
+- Use public pages only. Dashboard, sign-in, sign-up, checkout, and role-login routes are not included here.
+- Artist profiles are launch examples and should be described as listed profile content, not independently verified artist claims.
+- The platform operator in source config is Digital Energy Holdings, LLC.

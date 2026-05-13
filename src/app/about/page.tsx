@@ -4,6 +4,9 @@ import { siteConfig } from "@/lib/content";
 export const metadata = {
   title: "About",
   description: "The vision behind STL-Musicians.com.",
+  alternates: {
+    canonical: "/about",
+  },
 };
 
 export default function AboutPage() {

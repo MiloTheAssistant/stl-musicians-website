@@ -14,6 +14,9 @@ import { getPlanById } from "@/lib/subscription-plans";
 export const metadata = {
   title: "Pricing",
   description: "Stripe-backed subscription and promotion options for STL-Musicians.com.",
+  alternates: {
+    canonical: "/pricing",
+  },
 };
 
 export default function PricingPage() {

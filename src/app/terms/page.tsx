@@ -6,6 +6,9 @@ export const metadata = {
   title: "Terms of Service",
   description:
     "Terms of Service for STL-Musicians.com accounts, profiles, bookings, promotions, subscriptions, messaging, and moderated content.",
+  alternates: {
+    canonical: "/terms",
+  },
 };
 
 const lastUpdated = "May 6, 2026";

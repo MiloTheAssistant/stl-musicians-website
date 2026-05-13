@@ -5,6 +5,9 @@ import { events } from "@/lib/content";
 export const metadata = {
   title: "Events",
   description: "Discover the artists, rooms, and shows moving St. Louis.",
+  alternates: {
+    canonical: "/events",
+  },
 };
 
 export default function EventsPage() {

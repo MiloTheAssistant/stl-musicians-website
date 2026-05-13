@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { ButtonLink, Eyebrow, SectionShell, Tag } from "@/components/ui";
 import { getArtistBySlug } from "@/lib/content";
+import { canonicalPath, serializeJsonLd } from "@/lib/seo";
 
 export async function generateMetadata({
   params,
@@ -12,6 +13,9 @@ export async function generateMetadata({
   return {
     title: artist ? artist.name : "Musician",
     description: artist?.shortBio,
+    alternates: {
+      canonical: canonicalPath(`/musicians/${slug}`),
+    },
   };
 }
 
@@ -61,13 +65,16 @@ export default async function ArtistProfilePage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: serializeJsonLd({
             "@context": "https://schema.org",
             "@type": "MusicGroup",
             name: artist.name,
+            url: `https://stl-musicians.com/musicians/${artist.slug}`,
             genre: artist.genre,
             areaServed: "Greater St. Louis Metro",
             description: artist.shortBio,
+            event: artist.nextGig,
+            knowsAbout: artist.bookingFocus,
           }),
         }}
       />

@@ -4,6 +4,9 @@ import { artistProfiles, coreGenres } from "@/lib/content";
 export const metadata = {
   title: "Musicians",
   description: "Discover St. Louis musicians and bands by genre, media, and booking fit.",
+  alternates: {
+    canonical: "/musicians",
+  },
 };
 
 export default function MusiciansPage() {

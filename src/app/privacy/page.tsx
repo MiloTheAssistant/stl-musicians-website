@@ -5,6 +5,9 @@ export const metadata = {
   title: "Privacy Policy",
   description:
     "Privacy Policy for STL-Musicians.com accounts, profiles, bookings, promotions, payments, subscriptions, messaging, and analytics.",
+  alternates: {
+    canonical: "/privacy",
+  },
 };
 
 const lastUpdated = "May 6, 2026";

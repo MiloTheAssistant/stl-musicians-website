@@ -5,6 +5,9 @@ import { venues } from "@/lib/content";
 export const metadata = {
   title: "Venues",
   description: "Every St. Louis stage starts with the right connection.",
+  alternates: {
+    canonical: "/venues",
+  },
 };
 
 export default function VenuesPage() {
