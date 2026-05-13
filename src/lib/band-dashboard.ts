@@ -87,7 +87,7 @@ export function getCase44DashboardBand(): TestBandDashboard {
       },
       {
         label: "Songs",
-        href: "#songs",
+        href: "/dashboard/musician/songs",
         description: "Manage song spotlights and promotion campaigns.",
       },
       {

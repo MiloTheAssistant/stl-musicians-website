@@ -14,7 +14,7 @@ const defaultMusicianMemberships = [
   {
     bandSlug: "case44",
     dashboardHref: "/dashboard/musician",
-    emails: ["case44@stl-musicians.com"],
+    emails: ["case44@stl-musicians.com", "mtest@stl-musicians.com"],
   },
 ] as const;
 

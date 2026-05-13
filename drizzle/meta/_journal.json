@@ -8,6 +8,13 @@
       "when": 1778293465338,
       "tag": "0000_payments_phase_a",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1778705500649,
+      "tag": "0001_careless_mister_fear",
+      "breakpoints": true
     }
   ]
 }

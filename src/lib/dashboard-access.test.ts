@@ -31,14 +31,18 @@ describe("dashboard access", () => {
     ).toBe("/dashboard/admin");
   });
 
-  it("maps the Case44 email to a musician dashboard membership", () => {
+  it("maps Case44 musician emails to the musician dashboard membership", () => {
     expect(getMusicianMembershipForEmail("case44@stl-musicians.com")).toMatchObject({
+      bandSlug: "case44",
+      dashboardHref: "/dashboard/musician",
+    });
+    expect(getMusicianMembershipForEmail("mtest@stl-musicians.com")).toMatchObject({
       bandSlug: "case44",
       dashboardHref: "/dashboard/musician",
     });
     expect(
       getDashboardLandingForUser({
-        primaryEmailAddress: { emailAddress: "case44@stl-musicians.com" },
+        primaryEmailAddress: { emailAddress: "mtest@stl-musicians.com" },
       }),
     ).toBe("/dashboard/musician");
   });
@@ -51,6 +55,7 @@ describe("dashboard access", () => {
 
   it("limits the Case44 workspace to admins and the Case44 email", () => {
     expect(canAccessBandWorkspace("case44", "case44@stl-musicians.com")).toBe(true);
+    expect(canAccessBandWorkspace("case44", "mtest@stl-musicians.com")).toBe(true);
     expect(canAccessBandWorkspace("case44", "milotheassistant@gmail.com")).toBe(true);
     expect(canAccessBandWorkspace("case44", "artist@example.com")).toBe(false);
   });

@@ -71,6 +71,11 @@ describe("RoleDashboardPage", () => {
     });
     const text = getText(page);
     const iframes = collectElements(page, "iframe");
+    const songLinks = collectElementsWithProp(
+      page,
+      "href",
+      "/dashboard/musician/songs",
+    );
 
     expect(text).toContain("Musician / Band");
     expect(text).toContain("Case44 Workspace");
@@ -84,6 +89,7 @@ describe("RoleDashboardPage", () => {
     expect(text).toContain("Billing status:");
     expect(text).not.toContain("GitHub repo");
     expect(text).not.toContain("Account entry");
+    expect(songLinks).toHaveLength(1);
     expect(collectElementsWithProp(page, "alt", "Case44 band logo")).toHaveLength(1);
     expect(iframes).toHaveLength(0);
   });

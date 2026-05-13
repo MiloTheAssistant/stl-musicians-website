@@ -48,6 +48,38 @@ export const artistProfilesTable = pgTable("artist_profiles", {
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
 });
 
+export const bandReleases = pgTable("band_releases", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  artistProfileId: uuid("artist_profile_id").references(
+    () => artistProfilesTable.id,
+  ),
+  title: text("title").notNull(),
+  releaseType: text("release_type").notNull(),
+  primaryTrackTitle: text("primary_track_title").notNull(),
+  releaseDate: timestamp("release_date", { withTimezone: true }),
+  smartLinkUrl: text("smart_link_url"),
+  artworkUrl: text("artwork_url"),
+  notes: text("notes"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+});
+
+export const artistAccountLinks = pgTable("artist_account_links", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  artistProfileId: uuid("artist_profile_id").references(
+    () => artistProfilesTable.id,
+  ),
+  platform: text("platform").notNull(),
+  category: text("category").notNull(),
+  url: text("url"),
+  status: text("status").notNull(),
+  setupMode: text("setup_mode").notNull(),
+  setupUrl: text("setup_url").notNull(),
+  notes: text("notes"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+});
+
 export const venuesTable = pgTable("venues", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull(),
@@ -71,6 +103,7 @@ export const promotionCampaigns = pgTable("promotion_campaigns", {
   artistProfileId: uuid("artist_profile_id").references(
     () => artistProfilesTable.id,
   ),
+  releaseId: uuid("release_id").references(() => bandReleases.id),
   title: text("title").notNull(),
   campaignType: text("campaign_type").notNull(),
   status: campaignStatusEnum("status").notNull().default("draft"),
