@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 type BrandLogoProps = {
@@ -36,13 +35,10 @@ function LogoMark({ className }: { className?: string }) {
         className,
       )}
     >
-      <Image
-        src="/images/stl-musicians-mark.png"
-        alt=""
-        width={96}
-        height={96}
+      <span
         aria-hidden
-        className="size-12 object-contain"
+        className="size-12 bg-contain bg-center bg-no-repeat"
+        style={{ backgroundImage: "url('/images/stl-musicians-mark.png')" }}
       />
     </span>
   );

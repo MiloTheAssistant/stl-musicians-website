@@ -31,7 +31,7 @@ export default function Home() {
       <section className="relative overflow-hidden border-b border-[var(--line)] bg-[var(--ink)]">
         <Image
           src="/images/hero-ai-02.png"
-          alt=""
+          alt="Warm stage lights cutting through concert haze in a St. Louis music venue"
           fill
           priority
           sizes="100vw"
@@ -127,12 +127,10 @@ export default function Home() {
       </SectionShell>
 
       <section className="relative overflow-hidden border-y border-[var(--line)] bg-[var(--stage)]">
-        <Image
-          src="/images/hero-ai-03.png"
-          alt=""
-          fill
-          sizes="100vw"
-          className="object-cover opacity-34"
+        <div
+          aria-hidden
+          className="absolute inset-0 bg-cover bg-center opacity-34"
+          style={{ backgroundImage: "url('/images/hero-ai-03.png')" }}
         />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(27,26,23,0.96)_0%,rgba(27,26,23,0.82)_48%,rgba(27,26,23,0.7)_100%)]" />
         <SectionShell>
