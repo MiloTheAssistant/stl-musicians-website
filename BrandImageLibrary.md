@@ -20,6 +20,22 @@ Use this prompt to generate and maintain a complete, project-specific brand imag
 ```text
 public/
   README.md
+  brand/
+    README.md
+    masters/
+      arch-profile-stamp-concepts-contact-sheet.png
+      profile-stamp.png
+      favicon-source.png
+      arch-vinyl-soundwave-alt.png
+      arch-star-badge-alt.png
+    website/
+      profile-stamp.png
+    facebook/
+    instagram/
+    tiktok/
+    linkedin/
+    x/
+    case44/
   file.svg
   globe.svg
   next.svg
@@ -38,7 +54,7 @@ public/
       1bdbd8c8-case44-lettered.png
 ```
 
-The repo currently keeps wired website imagery in `public/images/`. Create `public/brand/` only when generating the reusable brand-library system described below.
+The repo keeps wired website imagery in `public/images/`, while reusable brand-library assets live in `public/brand/`.
 
 Do not move existing app-referenced assets unless code references are updated in the same change.
 
@@ -48,7 +64,7 @@ Create project-specific image assets that complement the existing live-music her
 
 Use a Hybrid Brand Library:
 
-- One strong profile stamp/profile image based on the existing star-note mark direction.
+- One strong Arch-anchored profile stamp/profile image for the primary logo source.
 - A related family of platform-native photoreal backgrounds.
 - Clean supporting images for website, social covers, posts, stories, and future musician/venue promotion surfaces.
 
@@ -109,7 +125,7 @@ The current file list from `public/images` and, once created, `public/brand`.
 
 Use a Hybrid Brand Library approach:
 
-- Lead with the existing star-note identity and stage-light visual language.
+- Lead with the St. Louis Gateway Arch as the local anchor and keep the stage-light visual language.
 - Keep the assets visually unified, but compose them for each platform's crop and use case.
 - Use St. Louis as a grounded local signal without overusing skyline cliches.
 - Treat Case44 as a featured test band/workspace asset, not the entire platform brand.
@@ -119,11 +135,14 @@ Use a Hybrid Brand Library approach:
 
 - Circular-crop safe.
 - Strong at small profile-picture sizes.
-- May use the star-note mark, musical note, stage light, or abstract venue signal.
+- Must use the St. Louis Gateway Arch as the primary anchor point.
+- May combine the Arch with a musical note, stage light, vinyl, soundwave, microphone, or badge signal.
 - Should feel like a premium local music platform stamp, not a generic record-label logo.
 - Do not rely on AI-generated readable text.
 - No fake words, watermarks, slogans, or detailed typography.
-- The existing `public/images/stl-musicians-mark.svg` and `public/images/stl-musicians-mark.png` are the current identity references.
+- The selected primary source is `public/brand/masters/profile-stamp.png`.
+- The selected favicon source is `public/brand/masters/favicon-source.png`.
+- The current app-wired header copy is `public/images/stl-musicians-mark.png`.
 
 ## Background Rules
 
@@ -136,7 +155,7 @@ Use a Hybrid Brand Library approach:
 
 ## Folder Structure
 
-Create this only when generating the brand-library assets:
+Use this brand-library structure for reusable generated assets:
 
 ```text
 public/brand/
@@ -157,6 +176,10 @@ Keep the current app-wired files in `public/images/` unless a code update intent
 
 ```text
 public/brand/masters/profile-stamp.png
+public/brand/masters/favicon-source.png
+public/brand/masters/arch-profile-stamp-concepts-contact-sheet.png
+public/brand/masters/arch-vinyl-soundwave-alt.png
+public/brand/masters/arch-star-badge-alt.png
 public/brand/masters/source-family-local-scene.png
 public/brand/masters/source-family-working-musician.png
 public/brand/masters/source-family-venue-discovery.png
@@ -259,6 +282,13 @@ public/images/stl-musicians-logo.svg
 public/images/stl-musicians-mark.png
 public/images/stl-musicians-mark.svg
 public/images/case44/1bdbd8c8-case44-lettered.png
+public/brand/README.md
+public/brand/masters/arch-profile-stamp-concepts-contact-sheet.png
+public/brand/masters/profile-stamp.png
+public/brand/masters/favicon-source.png
+public/brand/masters/arch-vinyl-soundwave-alt.png
+public/brand/masters/arch-star-badge-alt.png
+public/brand/website/profile-stamp.png
 src/app/opengraph-image.tsx
 src/app/icon.png
 src/app/apple-icon.png
@@ -274,4 +304,5 @@ public/images/hero-ai-03.png - 1672x941
 public/images/hero-ai-04.png - 1672x941
 public/images/stl-musicians-mark.png - 512x512
 public/images/case44/1bdbd8c8-case44-lettered.png - 1000x785
+public/brand/website/profile-stamp.png - 512x512
 ```
