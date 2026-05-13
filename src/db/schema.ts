@@ -137,6 +137,36 @@ export const stripeSubscriptions = pgTable("stripe_subscriptions", {
   updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
 
+export const promotionCarts = pgTable("promotion_carts", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  clerkUserId: text("clerk_user_id").notNull(),
+  bandSlug: text("band_slug").notNull(),
+  campaignId: text("campaign_id"),
+  status: text("status").notNull().default("open"),
+  stripeCheckoutSessionId: text("stripe_checkout_session_id"),
+  amountTotalCents: integer("amount_total_cents"),
+  currency: text("currency").notNull().default("usd"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+});
+
+export const promotionCartItems = pgTable("promotion_cart_items", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  cartId: uuid("cart_id")
+    .notNull()
+    .references(() => promotionCarts.id),
+  promotionProductId: text("promotion_product_id").notNull(),
+  promotionCampaignId: text("promotion_campaign_id"),
+  promotionPackage: text("promotion_package").notNull(),
+  description: text("description").notNull(),
+  quantity: integer("quantity").notNull().default(1),
+  unitAmountCents: integer("unit_amount_cents").notNull(),
+  amountCents: integer("amount_cents").notNull(),
+  currency: text("currency").notNull().default("usd"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+});
+
 export const stripeCheckoutSessions = pgTable("stripe_checkout_sessions", {
   id: uuid("id").primaryKey().defaultRandom(),
   stripeSessionId: text("stripe_session_id").notNull().unique(),
@@ -149,6 +179,7 @@ export const stripeCheckoutSessions = pgTable("stripe_checkout_sessions", {
   promotionCampaignId: uuid("promotion_campaign_id").references(
     () => promotionCampaigns.id,
   ),
+  promotionCartId: uuid("promotion_cart_id").references(() => promotionCarts.id),
   amountTotalCents: integer("amount_total_cents"),
   currency: text("currency"),
   status: text("status").notNull(),
@@ -166,6 +197,23 @@ export const promotionPayments = pgTable("promotion_payments", {
   promotionPackage: text("promotion_package").notNull(),
   stripeCheckoutSessionId: text("stripe_checkout_session_id").notNull().unique(),
   stripePaymentIntentId: text("stripe_payment_intent_id"),
+  amountCents: integer("amount_cents").notNull(),
+  currency: text("currency").notNull(),
+  status: text("status").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+});
+
+export const promotionOrderItems = pgTable("promotion_order_items", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  clerkUserId: text("clerk_user_id").notNull(),
+  promotionCartId: uuid("promotion_cart_id").references(() => promotionCarts.id),
+  stripeCheckoutSessionId: text("stripe_checkout_session_id").notNull(),
+  promotionProductId: text("promotion_product_id").notNull(),
+  promotionCampaignId: text("promotion_campaign_id"),
+  promotionPackage: text("promotion_package").notNull(),
+  quantity: integer("quantity").notNull().default(1),
+  unitAmountCents: integer("unit_amount_cents").notNull(),
   amountCents: integer("amount_cents").notNull(),
   currency: text("currency").notNull(),
   status: text("status").notNull(),

@@ -78,15 +78,19 @@ describe("SongsDashboardPage", () => {
     expect(text).toContain("Apple Music Promote");
     expect(text).toContain("TikTok for Artists");
     expect(text).toContain("Bandsintown");
-    expect(text).toContain("Pay2Boost");
+    expect(text).toContain("$-Pay-2-Boost");
     expect(text).toContain("Pump Up The Jams");
     expect(text).toContain("Visit Cart");
+    expect(text).toContain("Add 2 Campaign");
     expect(text).toContain("Case44 admin");
     expect(text).toContain("case44@stl-musicians.com");
     expect(text).toContain("OAuth later");
-    expect(forms).toHaveLength(0);
+    expect(forms).toHaveLength(4);
     expect(
       collectElementsWithProp(page, "href", "/pricing#paid-promotions"),
-    ).toHaveLength(4);
+    ).toHaveLength(0);
+    expect(
+      collectElementsWithProp(page, "href", "/dashboard/musician/songs/cart"),
+    ).toHaveLength(1);
   });
 });

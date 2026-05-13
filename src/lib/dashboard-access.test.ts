@@ -3,6 +3,7 @@ import {
   canAccessBandWorkspace,
   canAccessDashboardRole,
   getDashboardLandingForUser,
+  getDashboardViewerAccessSummary,
   getMusicianMembershipForEmail,
   getPrimaryEmail,
   isAdministratorEmail,
@@ -60,5 +61,26 @@ describe("dashboard access", () => {
     expect(canAccessBandWorkspace("case44", "mtest@stl-musicians.com")).toBe(true);
     expect(canAccessBandWorkspace("case44", "milotheassistant@gmail.com")).toBe(true);
     expect(canAccessBandWorkspace("case44", "artist@example.com")).toBe(false);
+  });
+
+  it("summarizes the signed-in dashboard viewer access", () => {
+    expect(
+      getDashboardViewerAccessSummary("musician", "case44@stl-musicians.com"),
+    ).toEqual({
+      label: "Case44 admin",
+      detail: "case44@stl-musicians.com",
+    });
+    expect(
+      getDashboardViewerAccessSummary("musician", "mtest@stl-musicians.com"),
+    ).toEqual({
+      label: "Case44 member",
+      detail: "mtest@stl-musicians.com",
+    });
+    expect(
+      getDashboardViewerAccessSummary("admin", "milotheassistant@gmail.com"),
+    ).toEqual({
+      label: "Site admin",
+      detail: "milotheassistant@gmail.com",
+    });
   });
 });

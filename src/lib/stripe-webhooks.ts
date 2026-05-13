@@ -4,6 +4,7 @@ import {
   recordPromotionPaymentFromCheckout,
   upsertSubscriptionFromStripe,
 } from "./payment-records";
+import { recordPromotionCartOrderFromCheckout } from "./promotion-cart-records";
 import { getStripe } from "./stripe-client";
 
 function stringMetadata(value: string | undefined) {
@@ -55,6 +56,19 @@ export async function handleStripeWebhookEvent(event: Stripe.Event) {
           currency: session.currency,
         });
         await recordPromotionPaymentFromCheckout(session);
+      }
+
+      if (kind === "promotion-cart") {
+        await recordCheckoutSession({
+          stripeSessionId: session.id,
+          kind,
+          clerkUserId,
+          promotionCartId: stringMetadata(metadata.promotionCartId),
+          status: session.status ?? "complete",
+          amountTotalCents: session.amount_total,
+          currency: session.currency,
+        });
+        await recordPromotionCartOrderFromCheckout(session);
       }
 
       return { handled: true };

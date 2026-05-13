@@ -10,7 +10,7 @@ import {
 } from "@/db/schema";
 import { getPlanById, type SubscriptionPlanId } from "./subscription-plans";
 
-export type CheckoutSessionKind = "subscription" | "promotion";
+export type CheckoutSessionKind = "subscription" | "promotion" | "promotion-cart";
 
 export type StripeCustomerRecordInput = {
   clerkUserId: string;
@@ -29,6 +29,7 @@ export type CheckoutSessionRecordInput = {
   promotionProductId?: string | null;
   promotionPackage?: string | null;
   promotionCampaignId?: string | null;
+  promotionCartId?: string | null;
   amountTotalCents?: number | null;
   currency?: string | null;
 };
@@ -110,6 +111,7 @@ export async function recordCheckoutSession(input: CheckoutSessionRecordInput) {
       promotionProductId: input.promotionProductId ?? null,
       promotionPackage: input.promotionPackage ?? null,
       promotionCampaignId: input.promotionCampaignId ?? null,
+      promotionCartId: input.promotionCartId ?? null,
       amountTotalCents: input.amountTotalCents ?? null,
       currency: input.currency ?? null,
       updatedAt: new Date(),

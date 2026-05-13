@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import { notFound } from "next/navigation";
 import { ButtonLink, Eyebrow, SectionShell, Tag } from "@/components/ui";
-import { createPromotionCheckout } from "@/app/pricing/actions";
 import { getCase44DashboardBand } from "@/lib/band-dashboard";
 import {
   canAccessBandWorkspace,
@@ -27,14 +26,11 @@ import {
   type AccountSetupStatus,
   type PromotionActionStatus,
 } from "@/lib/song-promotion";
+import { addPromotionToCart } from "./cart/actions";
 
 const hasClerkEnv =
   Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
   Boolean(process.env.CLERK_SECRET_KEY);
-
-const hasPromotionCheckoutEnv =
-  Boolean(process.env.STRIPE_SECRET_KEY) &&
-  Boolean(process.env.NEXT_PUBLIC_APP_URL);
 
 export const metadata = {
   title: "Songs Command Center",
@@ -254,10 +250,12 @@ export default async function SongsDashboardPage() {
       <section className="mt-6 rounded-lg border border-[var(--line)] bg-[rgba(33,49,77,0.25)] p-5 sm:p-6">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <Eyebrow>Pay2Boost</Eyebrow>
+            <Eyebrow>$-Pay-2-Boost</Eyebrow>
             <h2 className="mt-2 text-3xl font-black">Pump Up The Jams</h2>
           </div>
-          <Tag>Visit Cart</Tag>
+          <ButtonLink href="/dashboard/musician/songs/cart" variant="secondary">
+            Visit Cart
+          </ButtonLink>
         </div>
         <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {paidBoosts.map((boost) => (
@@ -271,24 +269,20 @@ export default async function SongsDashboardPage() {
                 {boost.description}
               </p>
               <p className="mt-4 text-2xl font-black">{formatCents(boost.amountCents)}</p>
-              {hasPromotionCheckoutEnv ? (
-                <form action={createPromotionCheckout} className="mt-auto pt-5">
-                  <input type="hidden" name="promotionProductId" value={boost.id} />
-                  <button
-                    type="submit"
-                    className="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-[var(--brass)] px-4 py-2 text-sm font-bold text-[var(--ink)] transition hover:bg-[var(--brass-light)] focus:outline-none focus:ring-2 focus:ring-[var(--brass-light)]"
-                  >
-                    Add to campaign
-                  </button>
-                </form>
-              ) : (
-                <ButtonLink
-                  href="/pricing#paid-promotions"
-                  className="mt-auto min-h-11 w-full justify-center"
+              <form action={addPromotionToCart} className="mt-auto pt-5">
+                <input type="hidden" name="promotionProductId" value={boost.id} />
+                <input
+                  type="hidden"
+                  name="promotionCampaignId"
+                  value={activeCampaign.id}
+                />
+                <button
+                  type="submit"
+                  className="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-[var(--brass)] px-4 py-2 text-sm font-bold text-[var(--ink)] transition hover:bg-[var(--brass-light)] focus:outline-none focus:ring-2 focus:ring-[var(--brass-light)]"
                 >
-                  Visit Cart
-                </ButtonLink>
-              )}
+                  Add 2 Campaign
+                </button>
+              </form>
             </article>
           ))}
         </div>

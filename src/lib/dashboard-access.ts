@@ -107,3 +107,38 @@ export function canAccessBandWorkspace(
     getMusicianMembershipForEmail(email)?.bandSlug === bandSlug
   );
 }
+
+export function getDashboardViewerAccessSummary(
+  role: UserRoleId,
+  email: string | null | undefined,
+) {
+  const normalizedEmail = normalizeEmail(email);
+
+  if (!normalizedEmail) {
+    return {
+      label: "Preview access",
+      detail: "Local preview session",
+    };
+  }
+
+  if (isAdministratorEmail(normalizedEmail)) {
+    return {
+      label: "Site admin",
+      detail: normalizedEmail,
+    };
+  }
+
+  const membership = getMusicianMembershipForEmail(normalizedEmail);
+
+  if (membership?.bandSlug === "case44") {
+    return {
+      label: membership.role === "admin" ? "Case44 admin" : "Case44 member",
+      detail: normalizedEmail,
+    };
+  }
+
+  return {
+    label: `${role[0]?.toUpperCase()}${role.slice(1)} access`,
+    detail: normalizedEmail,
+  };
+}

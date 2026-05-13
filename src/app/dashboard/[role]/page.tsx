@@ -24,6 +24,7 @@ import { artistProfiles, events, promotionPackages } from "@/lib/content";
 import {
   canAccessBandWorkspace,
   canAccessDashboardRole,
+  getDashboardViewerAccessSummary,
   getPrimaryEmail,
 } from "@/lib/dashboard-access";
 import {
@@ -102,6 +103,7 @@ export default async function RoleDashboardPage({
   }
 
   const config = userRoles.find((item) => item.id === role);
+  const viewerAccess = getDashboardViewerAccessSummary(role, viewerEmail);
   const case44Band = getCase44DashboardBand();
   const musicianDashboardBand =
     role === "musician" &&
@@ -147,8 +149,11 @@ export default async function RoleDashboardPage({
           <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-[var(--brass-light)]">
             Account
           </p>
-          <p className="mt-1 font-bold">Workspace access</p>
-          <p className="text-[var(--muted)]">Signed in dashboard session</p>
+          <p className="mt-1 text-xs font-semibold uppercase text-[var(--muted)]">
+            Workspace access
+          </p>
+          <p className="mt-1 font-bold">{viewerAccess.label}</p>
+          <p className="break-words text-[var(--muted)]">{viewerAccess.detail}</p>
         </div>
       </div>
       {musicianDashboardBand && (

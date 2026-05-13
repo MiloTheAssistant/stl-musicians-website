@@ -78,6 +78,8 @@ describe("RoleDashboardPage", () => {
     );
 
     expect(text).toContain("Musician / Band");
+    expect(text).toContain("Preview access");
+    expect(text).toContain("Local preview session");
     expect(text).toContain("Case44 Workspace");
     expect(text).toContain("Songs Promoted");
     expect(text).toContain("Social Media Impact");
