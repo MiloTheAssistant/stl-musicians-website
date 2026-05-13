@@ -32,6 +32,10 @@ const hasClerkEnv =
   Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
   Boolean(process.env.CLERK_SECRET_KEY);
 
+const hasPromotionCheckoutEnv =
+  Boolean(process.env.STRIPE_SECRET_KEY) &&
+  Boolean(process.env.NEXT_PUBLIC_APP_URL);
+
 export const metadata = {
   title: "Songs Command Center",
 };
@@ -135,6 +139,14 @@ export default async function SongsDashboardPage() {
               platforms where deeper account connections can add metrics or posting
               support once the workflow is proven.
             </p>
+            <div className="mt-4 rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.05)] p-3">
+              <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-[var(--brass-light)]">
+                Case44 admin
+              </p>
+              <p className="mt-1 break-words text-sm font-bold">
+                {workspace.adminEmail}
+              </p>
+            </div>
           </div>
         </div>
       </section>
@@ -242,10 +254,10 @@ export default async function SongsDashboardPage() {
       <section className="mt-6 rounded-lg border border-[var(--line)] bg-[rgba(33,49,77,0.25)] p-5 sm:p-6">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <Eyebrow>Paid help</Eyebrow>
-            <h2 className="mt-2 text-3xl font-black">STL-Musicians paid boosts</h2>
+            <Eyebrow>Pay2Boost</Eyebrow>
+            <h2 className="mt-2 text-3xl font-black">Pump Up The Jams</h2>
           </div>
-          <Tag>Stripe Checkout</Tag>
+          <Tag>Visit Cart</Tag>
         </div>
         <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           {paidBoosts.map((boost) => (
@@ -259,15 +271,24 @@ export default async function SongsDashboardPage() {
                 {boost.description}
               </p>
               <p className="mt-4 text-2xl font-black">{formatCents(boost.amountCents)}</p>
-              <form action={createPromotionCheckout} className="mt-auto pt-5">
-                <input type="hidden" name="promotionProductId" value={boost.id} />
-                <button
-                  type="submit"
-                  className="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-[var(--brass)] px-4 py-2 text-sm font-bold text-[var(--ink)] transition hover:bg-[var(--brass-light)] focus:outline-none focus:ring-2 focus:ring-[var(--brass-light)]"
+              {hasPromotionCheckoutEnv ? (
+                <form action={createPromotionCheckout} className="mt-auto pt-5">
+                  <input type="hidden" name="promotionProductId" value={boost.id} />
+                  <button
+                    type="submit"
+                    className="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-[var(--brass)] px-4 py-2 text-sm font-bold text-[var(--ink)] transition hover:bg-[var(--brass-light)] focus:outline-none focus:ring-2 focus:ring-[var(--brass-light)]"
+                  >
+                    Add to campaign
+                  </button>
+                </form>
+              ) : (
+                <ButtonLink
+                  href="/pricing#paid-promotions"
+                  className="mt-auto min-h-11 w-full justify-center"
                 >
-                  Add to campaign
-                </button>
-              </form>
+                  Visit Cart
+                </ButtonLink>
+              )}
             </article>
           ))}
         </div>

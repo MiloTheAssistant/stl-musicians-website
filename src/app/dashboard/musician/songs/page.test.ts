@@ -36,6 +36,34 @@ function collectElements(node: ReactNode, type: string): ReactElement[] {
   return children;
 }
 
+function collectElementsWithProp(
+  node: ReactNode,
+  propName: string,
+  propValue: string,
+): ReactElement[] {
+  if (Array.isArray(node)) {
+    return node.flatMap((child) =>
+      collectElementsWithProp(child, propName, propValue),
+    );
+  }
+
+  if (!isValidElement<Record<string, unknown> & { children?: ReactNode }>(node)) {
+    return [];
+  }
+
+  const children = collectElementsWithProp(
+    node.props.children,
+    propName,
+    propValue,
+  );
+
+  if (node.props[propName] === propValue) {
+    return [node, ...children];
+  }
+
+  return children;
+}
+
 describe("SongsDashboardPage", () => {
   it("renders the musician song command center for Case44", async () => {
     const page = await SongsDashboardPage();
@@ -50,8 +78,15 @@ describe("SongsDashboardPage", () => {
     expect(text).toContain("Apple Music Promote");
     expect(text).toContain("TikTok for Artists");
     expect(text).toContain("Bandsintown");
-    expect(text).toContain("STL-Musicians paid boosts");
+    expect(text).toContain("Pay2Boost");
+    expect(text).toContain("Pump Up The Jams");
+    expect(text).toContain("Visit Cart");
+    expect(text).toContain("Case44 admin");
+    expect(text).toContain("case44@stl-musicians.com");
     expect(text).toContain("OAuth later");
-    expect(forms.length).toBeGreaterThanOrEqual(4);
+    expect(forms).toHaveLength(0);
+    expect(
+      collectElementsWithProp(page, "href", "/pricing#paid-promotions"),
+    ).toHaveLength(4);
   });
 });

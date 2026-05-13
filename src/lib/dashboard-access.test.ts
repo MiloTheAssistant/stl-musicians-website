@@ -35,10 +35,12 @@ describe("dashboard access", () => {
     expect(getMusicianMembershipForEmail("case44@stl-musicians.com")).toMatchObject({
       bandSlug: "case44",
       dashboardHref: "/dashboard/musician",
+      role: "admin",
     });
     expect(getMusicianMembershipForEmail("mtest@stl-musicians.com")).toMatchObject({
       bandSlug: "case44",
       dashboardHref: "/dashboard/musician",
+      role: "member",
     });
     expect(
       getDashboardLandingForUser({

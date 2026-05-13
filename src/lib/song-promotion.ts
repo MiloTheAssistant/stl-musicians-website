@@ -65,6 +65,7 @@ export type SongPromotionChannel = {
 export type SongPromotionWorkspace = {
   bandSlug: string;
   bandName: string;
+  adminEmail: string;
   accountLinks: ArtistAccountLink[];
   activeCampaign: SongPromotionCampaign;
 };
@@ -96,7 +97,7 @@ export const songPromotionChannels: SongPromotionChannel[] = [
   },
   {
     id: "paid-boosts",
-    label: "STL-Musicians paid boosts",
+    label: "Pump Up The Jams",
     summary:
       "Optional paid promotion packages for musicians who want STL-Musicians to help fulfill the push.",
   },
@@ -105,6 +106,7 @@ export const songPromotionChannels: SongPromotionChannel[] = [
 const case44Workspace: SongPromotionWorkspace = {
   bandSlug: "case44",
   bandName: "Case44",
+  adminEmail: "case44@stl-musicians.com",
   accountLinks: [
     {
       platform: "Spotify",

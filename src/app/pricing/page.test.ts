@@ -56,6 +56,6 @@ describe("PricingPage", () => {
     expect(text).toContain("Event attendance push");
     expect(text).toContain("Featured artist placement");
     expect(text).toContain("Promotion checkout");
-    expect(forms).toHaveLength(8);
+    expect(forms).toHaveLength(0);
   });
 });

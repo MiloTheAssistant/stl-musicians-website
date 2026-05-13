@@ -4,6 +4,8 @@ type ClerkEmailAddress = {
   emailAddress?: string | null;
 };
 
+export type MusicianMembershipRole = "admin" | "member";
+
 export type DashboardAccessUser = {
   primaryEmailAddress?: ClerkEmailAddress | null;
   emailAddresses?: ClerkEmailAddress[] | null;
@@ -14,7 +16,8 @@ const defaultMusicianMemberships = [
   {
     bandSlug: "case44",
     dashboardHref: "/dashboard/musician",
-    emails: ["case44@stl-musicians.com", "mtest@stl-musicians.com"],
+    adminEmail: "case44@stl-musicians.com",
+    memberEmails: ["mtest@stl-musicians.com"],
   },
 ] as const;
 
@@ -52,19 +55,26 @@ function getCase44Emails(raw = process.env.CASE44_MUSICIAN_EMAILS) {
       .filter(Boolean) ?? [];
 
   return new Set(
-    [...defaultMusicianMemberships[0].emails, ...configuredEmails].map(
-      normalizeEmail,
-    ),
+    [
+      defaultMusicianMemberships[0].adminEmail,
+      ...defaultMusicianMemberships[0].memberEmails,
+      ...configuredEmails,
+    ].map(normalizeEmail),
   );
 }
 
 export function getMusicianMembershipForEmail(email: string | null | undefined) {
   const normalizedEmail = normalizeEmail(email);
+  const case44AdminEmail = normalizeEmail(defaultMusicianMemberships[0].adminEmail);
 
   if (getCase44Emails().has(normalizedEmail)) {
     return {
       bandSlug: "case44",
       dashboardHref: "/dashboard/musician",
+      role:
+        normalizedEmail === case44AdminEmail
+          ? ("admin" as const)
+          : ("member" as const),
     };
   }
 

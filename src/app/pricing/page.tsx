@@ -19,6 +19,10 @@ export const metadata = {
   },
 };
 
+const hasStripeCheckoutEnv =
+  Boolean(process.env.STRIPE_SECRET_KEY) &&
+  Boolean(process.env.NEXT_PUBLIC_APP_URL);
+
 export default function PricingPage() {
   const basicPlan = getPlanById("basic");
   const paidPlans = getPaidSubscriptionPlans();
@@ -85,32 +89,52 @@ export default function PricingPage() {
               ))}
             </ul>
             <div className="mt-auto grid gap-3 pt-6 sm:grid-cols-2">
-              <form action={createSubscriptionCheckout}>
-                <input type="hidden" name="planId" value={plan.id} />
-                <input type="hidden" name="billingInterval" value="monthly" />
+              {hasStripeCheckoutEnv ? (
+                <form action={createSubscriptionCheckout}>
+                  <input type="hidden" name="planId" value={plan.id} />
+                  <input type="hidden" name="billingInterval" value="monthly" />
+                  <button
+                    type="submit"
+                    className="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-[var(--brass)] px-4 py-2 text-sm font-bold text-[var(--ink)] transition hover:bg-[var(--brass-light)] focus:outline-none focus:ring-2 focus:ring-[var(--brass-light)]"
+                  >
+                    Monthly checkout
+                  </button>
+                </form>
+              ) : (
                 <button
-                  type="submit"
-                  className="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-[var(--brass)] px-4 py-2 text-sm font-bold text-[var(--ink)] transition hover:bg-[var(--brass-light)] focus:outline-none focus:ring-2 focus:ring-[var(--brass-light)]"
+                  type="button"
+                  disabled
+                  className="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-[rgba(245,234,210,0.16)] px-4 py-2 text-sm font-bold text-[var(--muted)]"
                 >
                   Monthly checkout
                 </button>
-              </form>
-              <form action={createSubscriptionCheckout}>
-                <input type="hidden" name="planId" value={plan.id} />
-                <input type="hidden" name="billingInterval" value="yearly" />
+              )}
+              {hasStripeCheckoutEnv ? (
+                <form action={createSubscriptionCheckout}>
+                  <input type="hidden" name="planId" value={plan.id} />
+                  <input type="hidden" name="billingInterval" value="yearly" />
+                  <button
+                    type="submit"
+                    className="inline-flex min-h-11 w-full items-center justify-center rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.08)] px-4 py-2 text-sm font-bold text-[var(--foreground)] transition hover:bg-[rgba(245,234,210,0.14)] focus:outline-none focus:ring-2 focus:ring-[var(--brass-light)]"
+                  >
+                    Yearly checkout
+                  </button>
+                </form>
+              ) : (
                 <button
-                  type="submit"
-                  className="inline-flex min-h-11 w-full items-center justify-center rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.08)] px-4 py-2 text-sm font-bold text-[var(--foreground)] transition hover:bg-[rgba(245,234,210,0.14)] focus:outline-none focus:ring-2 focus:ring-[var(--brass-light)]"
+                  type="button"
+                  disabled
+                  className="inline-flex min-h-11 w-full items-center justify-center rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.08)] px-4 py-2 text-sm font-bold text-[var(--muted)]"
                 >
                   Yearly checkout
                 </button>
-              </form>
+              )}
             </div>
           </article>
         ))}
       </div>
 
-      <section className="mt-14">
+      <section id="paid-promotions" className="mt-14 scroll-mt-24">
         <Eyebrow>Paid Promotions</Eyebrow>
         <h2 className="mt-3 text-3xl font-black">
           Buy campaign boosts without changing your subscription.
@@ -132,19 +156,29 @@ export default function PricingPage() {
               <p className="mt-5 text-3xl font-black">
                 {formatCents(product.amountCents)}
               </p>
-              <form action={createPromotionCheckout} className="mt-auto pt-6">
-                <input
-                  type="hidden"
-                  name="promotionProductId"
-                  value={product.id}
-                />
+              {hasStripeCheckoutEnv ? (
+                <form action={createPromotionCheckout} className="mt-auto pt-6">
+                  <input
+                    type="hidden"
+                    name="promotionProductId"
+                    value={product.id}
+                  />
+                  <button
+                    type="submit"
+                    className="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-[var(--brass)] px-4 py-2 text-sm font-bold text-[var(--ink)] transition hover:bg-[var(--brass-light)] focus:outline-none focus:ring-2 focus:ring-[var(--brass-light)]"
+                  >
+                    Promotion checkout
+                  </button>
+                </form>
+              ) : (
                 <button
-                  type="submit"
-                  className="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-[var(--brass)] px-4 py-2 text-sm font-bold text-[var(--ink)] transition hover:bg-[var(--brass-light)] focus:outline-none focus:ring-2 focus:ring-[var(--brass-light)]"
+                  type="button"
+                  disabled
+                  className="mt-auto inline-flex min-h-11 w-full items-center justify-center rounded-md bg-[rgba(245,234,210,0.16)] px-4 py-2 text-sm font-bold text-[var(--muted)]"
                 >
                   Promotion checkout
                 </button>
-              </form>
+              )}
             </article>
           ))}
         </div>
