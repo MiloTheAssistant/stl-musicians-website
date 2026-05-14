@@ -1,4 +1,4 @@
-import { isValidElement, type ReactNode } from "react";
+import { isValidElement, type ReactElement, type ReactNode } from "react";
 import { describe, expect, it } from "vitest";
 import ReleaseSmartLinkPage from "./page";
 
@@ -18,6 +18,34 @@ function getText(node: ReactNode): string {
   return "";
 }
 
+function collectElementsWithProp(
+  node: ReactNode,
+  propName: string,
+  propValue: string,
+): ReactElement[] {
+  if (Array.isArray(node)) {
+    return node.flatMap((child) =>
+      collectElementsWithProp(child, propName, propValue),
+    );
+  }
+
+  if (!isValidElement<Record<string, unknown> & { children?: ReactNode }>(node)) {
+    return [];
+  }
+
+  const children = collectElementsWithProp(
+    node.props.children,
+    propName,
+    propValue,
+  );
+
+  if (node.props[propName] === propValue) {
+    return [node, ...children];
+  }
+
+  return children;
+}
+
 describe("ReleaseSmartLinkPage", () => {
   it("renders the public Case44 SmartLink release page", async () => {
     const page = await ReleaseSmartLinkPage({
@@ -33,5 +61,10 @@ describe("ReleaseSmartLinkPage", () => {
     expect(text).toContain("YouTube");
     expect(text).toContain("Get release updates");
     expect(text).toContain("No passwords. No guaranteed playlist claims.");
+    expect(text).toContain("Featured STL release");
+    expect(text).toContain("Built for fans, venues, and launch-day sharing.");
+    expect(
+      collectElementsWithProp(page, "src", "/images/hero-ai-01.png"),
+    ).toHaveLength(1);
   });
 });
