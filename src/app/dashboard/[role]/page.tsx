@@ -31,6 +31,12 @@ import {
   getBillingSummaryForUser,
   getPaymentOperationsSummary,
 } from "@/lib/payment-records";
+import {
+  getCampaignFulfillmentTasks,
+  getReleaseSmartLinkPath,
+  getSmartLinkReleaseForCampaign,
+  getSongPromotionWorkspaceForBand,
+} from "@/lib/song-promotion";
 import { isKnownRole, userRoles } from "@/lib/roles";
 import {
   getPlanById,
@@ -105,6 +111,7 @@ export default async function RoleDashboardPage({
   const config = userRoles.find((item) => item.id === role);
   const viewerAccess = getDashboardViewerAccessSummary(role, viewerEmail);
   const case44Band = getCase44DashboardBand();
+  const case44PromotionWorkspace = getSongPromotionWorkspaceForBand(case44Band.slug);
   const musicianDashboardBand =
     role === "musician" &&
     (!hasClerkEnv || canAccessBandWorkspace(case44Band.slug, viewerEmail))
@@ -118,6 +125,21 @@ export default async function RoleDashboardPage({
     : null;
   const paymentOperations =
     role === "admin" ? await getPaymentOperationsSummary() : null;
+  const promotionFulfillment =
+    role === "admin" && case44PromotionWorkspace
+      ? [
+          {
+            workspace: case44PromotionWorkspace,
+            campaign: case44PromotionWorkspace.activeCampaign,
+            smartLink: getSmartLinkReleaseForCampaign(
+              case44PromotionWorkspace.activeCampaign.id,
+            ),
+            tasks: getCampaignFulfillmentTasks(
+              case44PromotionWorkspace.activeCampaign.id,
+            ),
+          },
+        ]
+      : [];
   const adminBandDirectory =
     role === "admin"
       ? [
@@ -453,6 +475,74 @@ export default async function RoleDashboardPage({
                 {paymentOperations.pendingPromotions}
               </p>
             </article>
+          </div>
+        </section>
+      )}
+      {promotionFulfillment.length > 0 && (
+        <section className="mt-10 rounded-lg border border-[var(--line)] bg-[var(--ink)] p-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <Eyebrow>Promotion Fulfillment</Eyebrow>
+              <h2 className="mt-2 text-3xl font-black">Campaign ops console</h2>
+              <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+                Manual status updates, operator notes, due dates, and proof links
+                belong here before API-heavy platform modules are worth adding.
+              </p>
+            </div>
+            <Tag>{promotionFulfillment.length} active campaign</Tag>
+          </div>
+
+          <div className="mt-6 space-y-5">
+            {promotionFulfillment.map(({ workspace, campaign, smartLink, tasks }) => (
+              <article
+                key={campaign.id}
+                className="rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.04)] p-5"
+              >
+                <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Tag>{workspace.bandName}</Tag>
+                      <Tag>{campaign.status}</Tag>
+                      <Tag>{campaign.release.releaseDate}</Tag>
+                    </div>
+                    <h3 className="mt-3 text-2xl font-black">{campaign.title}</h3>
+                    <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+                      {campaign.release.notes}
+                    </p>
+                  </div>
+                  {smartLink ? (
+                    <ButtonLink
+                      href={getReleaseSmartLinkPath(smartLink)}
+                      variant="secondary"
+                      className="w-full lg:w-auto"
+                    >
+                      Public SmartLink
+                    </ButtonLink>
+                  ) : null}
+                </div>
+
+                <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                  {tasks.map((task) => (
+                    <div
+                      key={task.id}
+                      className="rounded-md border border-[var(--line)] bg-[rgba(9,9,7,0.35)] p-4"
+                    >
+                      <div className="flex flex-wrap items-center gap-2">
+                        <Tag>{task.status}</Tag>
+                        <Tag>{task.owner}</Tag>
+                      </div>
+                      <h4 className="mt-3 text-lg font-black">{task.title}</h4>
+                      <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+                        Due {task.dueDate}. {task.guardrail}
+                      </p>
+                      <p className="mt-3 text-xs font-bold uppercase text-[var(--brass-light)]">
+                        Packages: {task.packageIds.join(", ")}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </article>
+            ))}
           </div>
         </section>
       )}
