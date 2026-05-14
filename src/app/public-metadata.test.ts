@@ -6,6 +6,7 @@ import { generateMetadata as generateArtistMetadata } from "./musicians/[slug]/p
 import { metadata as musiciansMetadata } from "./musicians/page";
 import { metadata as pricingMetadata } from "./pricing/page";
 import { metadata as privacyMetadata } from "./privacy/page";
+import { generateMetadata as generateReleaseMetadata } from "./releases/[releaseSlug]/page";
 import { metadata as termsMetadata } from "./terms/page";
 import { metadata as venuesMetadata } from "./venues/page";
 
@@ -28,6 +29,16 @@ describe("public route metadata", () => {
 
     expect(metadata.alternates?.canonical).toBe(
       "/musicians/riverfront-brass-union",
+    );
+  });
+
+  it("declares canonical paths for public SmartLink release routes", async () => {
+    const metadata = await generateReleaseMetadata({
+      params: Promise.resolve({ releaseSlug: "case44-long-way-home" }),
+    });
+
+    expect(metadata.alternates?.canonical).toBe(
+      "/releases/case44-long-way-home",
     );
   });
 });

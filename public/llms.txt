@@ -11,6 +11,7 @@
 - [About](https://stl-musicians.com/about): Platform background, purpose, and St. Louis market focus.
 - [Contact](https://stl-musicians.com/contact): Contact path for musicians, venues, promoters, and platform inquiries.
 - [Pricing](https://stl-musicians.com/pricing): Subscription and paid promotion options for working musicians.
+- [Case44 Long Way Home SmartLink](https://stl-musicians.com/releases/case44-long-way-home): Public release page with approved streaming handoffs, local STL tie-ins, and fan update capture.
 
 ## Artist Profiles
 

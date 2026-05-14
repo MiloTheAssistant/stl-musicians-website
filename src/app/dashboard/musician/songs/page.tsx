@@ -20,10 +20,14 @@ import {
 import { formatCents, getPromotionProductById } from "@/lib/payment-products";
 import {
   getAccountReadinessScore,
+  getCampaignFulfillmentTasks,
   getMissingAccountLinks,
+  getReleaseSmartLinkPath,
+  getSmartLinkReleaseForCampaign,
   getSongPromotionWorkspaceForBand,
   songPromotionChannels,
   type AccountSetupStatus,
+  type CampaignFulfillmentTask,
   type PromotionActionStatus,
 } from "@/lib/song-promotion";
 import { addPromotionToCart } from "./cart/actions";
@@ -36,7 +40,12 @@ export const metadata = {
   title: "Songs Command Center",
 };
 
-function statusLabel(status: AccountSetupStatus | PromotionActionStatus) {
+function statusLabel(
+  status:
+    | AccountSetupStatus
+    | PromotionActionStatus
+    | CampaignFulfillmentTask["status"],
+) {
   return status
     .split("-")
     .map((word) => word[0]?.toUpperCase() + word.slice(1))
@@ -66,6 +75,8 @@ export default async function SongsDashboardPage() {
   const paidBoosts = activeCampaign.paidBoostProductIds.map((productId) =>
     getPromotionProductById(productId),
   );
+  const smartLinkRelease = getSmartLinkReleaseForCampaign(activeCampaign.id);
+  const fulfillmentTasks = getCampaignFulfillmentTasks(activeCampaign.id);
 
   return (
     <SectionShell>
@@ -82,8 +93,8 @@ export default async function SongsDashboardPage() {
             Songs Command Center
           </h1>
           <p className="mt-4 max-w-3xl text-[var(--muted)]">
-            Plan one release campaign, check account readiness, and choose
-            self-service or STL-Musicians paid boosts from the same workspace.
+            Plan one release campaign, operate SmartLink handoffs, and choose
+            tiered STL-Musicians launch packages from the same workspace.
           </p>
         </div>
         <div className="rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.06)] px-4 py-3 text-sm">
@@ -129,11 +140,11 @@ export default async function SongsDashboardPage() {
           </div>
           <div className="rounded-md border border-[var(--line)] bg-[rgba(33,49,77,0.25)] p-4">
             <Settings2 className="size-5 text-[var(--brass-light)]" aria-hidden />
-            <h3 className="mt-3 text-xl font-black">Setup mode</h3>
+            <h3 className="mt-3 text-xl font-black">Concierge OS</h3>
             <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
-              V1 stores profile links and claim status. OAuth later callouts mark
-              platforms where deeper account connections can add metrics or posting
-              support once the workflow is proven.
+              Phase 1 stores profile links, claim status, public SmartLink
+              destinations, and fulfillment tasks. Official OAuth work stays
+              behind guarded handoffs until a specific paid workflow proves it.
             </p>
             <div className="mt-4 rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.05)] p-3">
               <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-[var(--brass-light)]">
@@ -143,6 +154,15 @@ export default async function SongsDashboardPage() {
                 {workspace.adminEmail}
               </p>
             </div>
+            {smartLinkRelease ? (
+              <ButtonLink
+                href={getReleaseSmartLinkPath(smartLinkRelease)}
+                variant="secondary"
+                className="mt-4 w-full"
+              >
+                Public SmartLink
+              </ButtonLink>
+            ) : null}
           </div>
         </div>
       </section>
@@ -247,14 +267,41 @@ export default async function SongsDashboardPage() {
         </div>
       </section>
 
+      <section className="mt-6 rounded-lg border border-[var(--line)] bg-[var(--ink)] p-5 sm:p-6">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <Eyebrow>Fulfillment</Eyebrow>
+            <h2 className="mt-2 text-3xl font-black">STL-Musicians ops checklist</h2>
+          </div>
+          <Tag>{fulfillmentTasks.length} tasks</Tag>
+        </div>
+        <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {fulfillmentTasks.map((task) => (
+            <article
+              key={task.id}
+              className="rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.04)] p-4"
+            >
+              <div className="flex flex-wrap items-center gap-2">
+                <Tag>{statusLabel(task.status)}</Tag>
+                <Tag>{task.owner}</Tag>
+              </div>
+              <h3 className="mt-3 text-lg font-black">{task.title}</h3>
+              <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
+                Due {task.dueDate}. {task.guardrail}
+              </p>
+            </article>
+          ))}
+        </div>
+      </section>
+
       <section className="mt-6 rounded-lg border border-[var(--line)] bg-[rgba(33,49,77,0.25)] p-5 sm:p-6">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <Eyebrow>$-Pay-2-Boost</Eyebrow>
-            <h2 className="mt-2 text-3xl font-black">Pump Up The Jams</h2>
+            <Eyebrow>Concierge packages</Eyebrow>
+            <h2 className="mt-2 text-3xl font-black">Tiered launch packages</h2>
           </div>
           <ButtonLink href="/dashboard/musician/songs/cart" variant="secondary">
-            Visit Cart
+            Campaign Cart
           </ButtonLink>
         </div>
         <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -280,7 +327,7 @@ export default async function SongsDashboardPage() {
                   type="submit"
                   className="inline-flex min-h-11 w-full items-center justify-center rounded-md bg-[var(--brass)] px-4 py-2 text-sm font-bold text-[var(--ink)] transition hover:bg-[var(--brass-light)] focus:outline-none focus:ring-2 focus:ring-[var(--brass-light)]"
                 >
-                  Add 2 Campaign
+                  Add package
                 </button>
               </form>
             </article>
@@ -293,9 +340,9 @@ export default async function SongsDashboardPage() {
         <h2 className="mt-4 text-2xl font-black">Operational note</h2>
         <p className="mt-3 max-w-4xl text-sm leading-6 text-[var(--muted)]">
           This command center is reusable for future bands. Case44 is the first
-          validation workspace, while account links, releases, actions, and
-          promotion campaign records can move behind Neon and Drizzle without
-          changing the dashboard workflow.
+          validation workspace, while SmartLink pages, release platform links,
+          fulfillment tasks, notes, click events, and fan leads can move behind
+          Neon and Drizzle without changing the dashboard workflow.
         </p>
       </section>
     </SectionShell>

@@ -62,6 +62,45 @@ export type SongPromotionChannel = {
   summary: string;
 };
 
+export type ReleasePlatformLink = {
+  id: string;
+  platform: string;
+  category: SongPromotionChannelId | "smartlink";
+  url: string;
+  status: "live" | "setup" | "handoff";
+  ctaLabel: string;
+  description: string;
+};
+
+export type SmartLinkRelease = {
+  slug: string;
+  campaignId: string;
+  bandSlug: string;
+  bandName: string;
+  title: string;
+  releaseType: BandRelease["releaseType"];
+  primaryTrackTitle: string;
+  releaseDate: string;
+  artworkUrl?: string;
+  summary: string;
+  fanCaptureEnabled: boolean;
+  destinationLinks: ReleasePlatformLink[];
+  localTieIns: string[];
+  guardrails: string[];
+};
+
+export type CampaignFulfillmentTask = {
+  id: string;
+  campaignId: string;
+  title: string;
+  status: "todo" | "in-progress" | "blocked" | "done";
+  owner: "stl-musicians" | "artist";
+  dueDate: string;
+  packageIds: string[];
+  guardrail: string;
+  requiresOfficialAccess: boolean;
+};
+
 export type SongPromotionWorkspace = {
   bandSlug: string;
   bandName: string;
@@ -97,9 +136,9 @@ export const songPromotionChannels: SongPromotionChannel[] = [
   },
   {
     id: "paid-boosts",
-    label: "Pump Up The Jams",
+    label: "Concierge launch packages",
     summary:
-      "Optional paid promotion packages for musicians who want STL-Musicians to help fulfill the push.",
+      "Tiered launch packages for musicians who want STL-Musicians to help fulfill the release workflow.",
   },
 ];
 
@@ -216,10 +255,10 @@ const case44Workspace: SongPromotionWorkspace = {
       "paid-boosts",
     ],
     paidBoostProductIds: [
-      "song-release",
-      "album-launch",
-      "event-attendance",
-      "featured-artist",
+      "smartlink-setup",
+      "launch-prep",
+      "local-stl-push",
+      "full-release-campaign",
     ],
     release: {
       id: "case44-long-way-home",
@@ -297,8 +336,172 @@ const case44Workspace: SongPromotionWorkspace = {
 
 const songPromotionWorkspaces: SongPromotionWorkspace[] = [case44Workspace];
 
+const case44SmartLinkRelease: SmartLinkRelease = {
+  slug: "case44-long-way-home",
+  campaignId: case44Workspace.activeCampaign.id,
+  bandSlug: case44Workspace.bandSlug,
+  bandName: case44Workspace.bandName,
+  title: "Long Way Home",
+  releaseType: "single",
+  primaryTrackTitle: "Long Way Home",
+  releaseDate: "2026-06-14",
+  artworkUrl: "/images/case44/1bdbd8c8-case44-lettered.png",
+  summary:
+    "Listen, follow, and catch the local STL release push for Case44's Long Way Home.",
+  fanCaptureEnabled: true,
+  destinationLinks: [
+    {
+      id: "spotify",
+      platform: "Spotify",
+      category: "streaming",
+      url: "https://artists.spotify.com/en/campaign-kit",
+      status: "handoff",
+      ctaLabel: "Open Spotify",
+      description:
+        "Profile and pitch-prep handoff until the live release destination is available.",
+    },
+    {
+      id: "apple-music",
+      platform: "Apple Music",
+      category: "streaming",
+      url: "https://musicconnect.apple.com/support/5577-promote-albums-songs-custom-social-assets",
+      status: "handoff",
+      ctaLabel: "Open Apple Music",
+      description: "Apple Promote asset checklist and release card handoff.",
+    },
+    {
+      id: "youtube",
+      platform: "YouTube",
+      category: "social-video",
+      url: "https://www.artists.youtube/features/",
+      status: "handoff",
+      ctaLabel: "Open YouTube",
+      description: "Shorts, video, and Official Artist Channel readiness path.",
+    },
+    {
+      id: "bandcamp-distrokid",
+      platform: "Bandcamp / DistroKid",
+      category: "direct-to-fan",
+      url: "https://support.distrokid.com/hc/en-us/articles/360013647913-What-Is-HyperFollow",
+      status: "setup",
+      ctaLabel: "Open HyperFollow",
+      description: "Pre-save, smart link, and direct-to-fan setup path.",
+    },
+    {
+      id: "bandsintown",
+      platform: "Bandsintown",
+      category: "local-stl",
+      url: "https://www.artist.bandsintown.com/widget-api",
+      status: "setup",
+      ctaLabel: "Open Bandsintown",
+      description: "Show tie-ins, fan alerts, and local release calendar readiness.",
+    },
+  ],
+  localTieIns: [
+    "STL-Musicians featured release slot",
+    "Venue and release-show tie-in",
+    "Fan update capture for launch follow-up",
+  ],
+  guardrails: [
+    "No passwords. No guaranteed playlist claims.",
+    "No artificial streaming, fake fan activity, or guaranteed platform outcomes.",
+    "Official platform access stays as authorized handoffs until API value is proven.",
+  ],
+};
+
+const smartLinkReleases: SmartLinkRelease[] = [case44SmartLinkRelease];
+
+const campaignFulfillmentTasks: CampaignFulfillmentTask[] = [
+  {
+    id: "smartlink-page-setup",
+    campaignId: case44Workspace.activeCampaign.id,
+    title: "SmartLink page setup",
+    status: "todo",
+    owner: "stl-musicians",
+    dueDate: "2026-05-20",
+    packageIds: ["smartlink-setup", "full-release-campaign"],
+    guardrail: "No password collection; only artist-approved public links.",
+    requiresOfficialAccess: false,
+  },
+  {
+    id: "spotify-pitch-prep",
+    campaignId: case44Workspace.activeCampaign.id,
+    title: "Spotify pitch-prep handoff",
+    status: "todo",
+    owner: "artist",
+    dueDate: "2026-05-22",
+    packageIds: ["launch-prep", "full-release-campaign"],
+    guardrail: "Prepare pitch materials without promising editorial placement.",
+    requiresOfficialAccess: false,
+  },
+  {
+    id: "apple-asset-pack",
+    campaignId: case44Workspace.activeCampaign.id,
+    title: "Apple Music asset pack",
+    status: "todo",
+    owner: "stl-musicians",
+    dueDate: "2026-05-24",
+    packageIds: ["launch-prep", "full-release-campaign"],
+    guardrail: "Use official Promote assets and approved release copy.",
+    requiresOfficialAccess: false,
+  },
+  {
+    id: "short-form-launch-kit",
+    campaignId: case44Workspace.activeCampaign.id,
+    title: "Short-form launch kit",
+    status: "todo",
+    owner: "stl-musicians",
+    dueDate: "2026-05-27",
+    packageIds: ["launch-prep", "full-release-campaign"],
+    guardrail: "Use authorized posting and boosting instructions only.",
+    requiresOfficialAccess: false,
+  },
+  {
+    id: "local-stl-release-push",
+    campaignId: case44Workspace.activeCampaign.id,
+    title: "Local STL release push",
+    status: "todo",
+    owner: "stl-musicians",
+    dueDate: "2026-06-03",
+    packageIds: ["local-stl-push", "full-release-campaign"],
+    guardrail: "Represent placement as outreach and scheduling, not guaranteed outcomes.",
+    requiresOfficialAccess: false,
+  },
+  {
+    id: "post-launch-proof",
+    campaignId: case44Workspace.activeCampaign.id,
+    title: "Post-launch proof and recap",
+    status: "todo",
+    owner: "stl-musicians",
+    dueDate: "2026-06-21",
+    packageIds: ["full-release-campaign"],
+    guardrail: "Report observed activity and completed work without inflated performance claims.",
+    requiresOfficialAccess: false,
+  },
+];
+
 export function getSongPromotionWorkspaceForBand(bandSlug: string) {
   return songPromotionWorkspaces.find((workspace) => workspace.bandSlug === bandSlug);
+}
+
+export function getPublishedSmartLinkReleases() {
+  return smartLinkReleases;
+}
+
+export function getSmartLinkReleaseBySlug(releaseSlug: string) {
+  return smartLinkReleases.find((release) => release.slug === releaseSlug);
+}
+
+export function getSmartLinkReleaseForCampaign(campaignId: string) {
+  return smartLinkReleases.find((release) => release.campaignId === campaignId);
+}
+
+export function getReleaseSmartLinkPath(release: Pick<SmartLinkRelease, "slug">) {
+  return `/releases/${release.slug}`;
+}
+
+export function getCampaignFulfillmentTasks(campaignId: string) {
+  return campaignFulfillmentTasks.filter((task) => task.campaignId === campaignId);
 }
 
 export function getMissingAccountLinks(workspace: SongPromotionWorkspace) {

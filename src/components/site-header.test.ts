@@ -91,7 +91,10 @@ describe("SiteHeader", () => {
     expect(labels).not.toContain("Dashboard Login");
     expect(labels).not.toContain("Musician Login");
     expect(labels).not.toContain("Join");
-    expect(links).toContainEqual({ href: "/dashboard", text: "Sign-Up / Sign-In" });
+    expect(links).toContainEqual({
+      href: "/dashboard",
+      text: "Sign-InSign-Up / Sign-In",
+    });
   });
 
   it("keeps the discovery navigation visible in the header", () => {

@@ -51,10 +51,10 @@ describe("PricingPage", () => {
     expect(text).toContain("$390");
     expect(text).toContain("Monthly checkout");
     expect(text).toContain("Yearly checkout");
-    expect(text).toContain("Song release promotion");
-    expect(text).toContain("Album launch campaign");
-    expect(text).toContain("Event attendance push");
-    expect(text).toContain("Featured artist placement");
+    expect(text).toContain("SmartLink Setup");
+    expect(text).toContain("Launch Prep");
+    expect(text).toContain("Local STL Push");
+    expect(text).toContain("Full Release Campaign");
     expect(text).toContain("Promotion checkout");
     expect(forms).toHaveLength(0);
   });

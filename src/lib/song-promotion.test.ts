@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
+  getCampaignFulfillmentTasks,
+  getReleaseSmartLinkPath,
   getMissingAccountLinks,
+  getSmartLinkReleaseBySlug,
   getSongPromotionWorkspaceForBand,
   songPromotionChannels,
 } from "./song-promotion";
@@ -14,10 +17,10 @@ describe("song promotion workspace", () => {
     expect(workspace?.activeCampaign.goal).toBe("Release visibility");
     expect(workspace?.activeCampaign.release.title).toBe("Long Way Home");
     expect(workspace?.activeCampaign.paidBoostProductIds).toEqual([
-      "song-release",
-      "album-launch",
-      "event-attendance",
-      "featured-artist",
+      "smartlink-setup",
+      "launch-prep",
+      "local-stl-push",
+      "full-release-campaign",
     ]);
     expect(workspace?.activeCampaign.actions).toHaveLength(5);
     expect(
@@ -56,5 +59,44 @@ describe("song promotion workspace", () => {
         }),
       ]),
     );
+  });
+
+  it("publishes a public SmartLink release page contract for the campaign", () => {
+    const smartLink = getSmartLinkReleaseBySlug("case44-long-way-home");
+
+    expect(smartLink).toMatchObject({
+      slug: "case44-long-way-home",
+      bandSlug: "case44",
+      campaignId: "11111111-1111-4111-8111-111111111111",
+      title: "Long Way Home",
+      fanCaptureEnabled: true,
+    });
+    expect(getReleaseSmartLinkPath(smartLink!)).toBe(
+      "/releases/case44-long-way-home",
+    );
+    expect(smartLink?.destinationLinks.map((link) => link.platform)).toEqual([
+      "Spotify",
+      "Apple Music",
+      "YouTube",
+      "Bandcamp / DistroKid",
+      "Bandsintown",
+    ]);
+  });
+
+  it("tracks concierge fulfillment tasks without promising platform outcomes", () => {
+    const tasks = getCampaignFulfillmentTasks(
+      "11111111-1111-4111-8111-111111111111",
+    );
+
+    expect(tasks.map((task) => task.title)).toEqual([
+      "SmartLink page setup",
+      "Spotify pitch-prep handoff",
+      "Apple Music asset pack",
+      "Short-form launch kit",
+      "Local STL release push",
+      "Post-launch proof and recap",
+    ]);
+    expect(tasks.every((task) => task.requiresOfficialAccess)).toBe(false);
+    expect(tasks.some((task) => task.guardrail.includes("No password"))).toBe(true);
   });
 });

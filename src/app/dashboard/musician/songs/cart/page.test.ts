@@ -24,9 +24,9 @@ describe("SongsCartPage", () => {
     const text = getText(page);
 
     expect(text).toContain("Campaign Cart");
-    expect(text).toContain("Pump Up The Jams");
+    expect(text).toContain("Concierge packages");
     expect(text).toContain("Multi-item Stripe Checkout");
-    expect(text).toContain("Add more boosts");
-    expect(text).toContain("No campaign boosts yet");
+    expect(text).toContain("Add more packages");
+    expect(text).toContain("No launch packages yet");
   });
 });

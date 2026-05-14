@@ -78,10 +78,12 @@ describe("SongsDashboardPage", () => {
     expect(text).toContain("Apple Music Promote");
     expect(text).toContain("TikTok for Artists");
     expect(text).toContain("Bandsintown");
-    expect(text).toContain("$-Pay-2-Boost");
-    expect(text).toContain("Pump Up The Jams");
-    expect(text).toContain("Visit Cart");
-    expect(text).toContain("Add 2 Campaign");
+    expect(text).toContain("Concierge packages");
+    expect(text).toContain("Tiered launch packages");
+    expect(text).toContain("Campaign Cart");
+    expect(text).toContain("Add package");
+    expect(text).toContain("Public SmartLink");
+    expect(text).toContain("STL-Musicians ops checklist");
     expect(text).toContain("Case44 admin");
     expect(text).toContain("case44@stl-musicians.com");
     expect(text).toContain("OAuth later");

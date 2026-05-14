@@ -32,31 +32,35 @@ const subscriptionPriceEnvKeys: Record<
 
 export const promotionProducts: PromotionProduct[] = [
   {
-    id: "song-release",
-    name: "Song release promotion",
-    description: "Boost a single song release across discovery and social placements.",
+    id: "smartlink-setup",
+    name: "SmartLink Setup",
+    description:
+      "Create the public release landing page, tracked outbound links, and fan capture path.",
     amountCents: 4900,
     currency: "usd",
   },
   {
-    id: "album-launch",
-    name: "Album launch campaign",
-    description: "Coordinate launch visibility for a full album or EP campaign.",
+    id: "launch-prep",
+    name: "Launch Prep",
+    description:
+      "Prepare pitch-ready metadata, platform handoffs, and authorized release checklists.",
     amountCents: 9900,
     currency: "usd",
   },
   {
-    id: "event-attendance",
-    name: "Event attendance push",
-    description: "Promote an upcoming show or venue date to local music fans.",
-    amountCents: 6900,
+    id: "local-stl-push",
+    name: "Local STL Push",
+    description:
+      "Coordinate venue, show, newsletter, and STL-Musicians placement opportunities.",
+    amountCents: 14900,
     currency: "usd",
   },
   {
-    id: "featured-artist",
-    name: "Featured artist placement",
-    description: "Place a musician or band in featured discovery surfaces.",
-    amountCents: 7900,
+    id: "full-release-campaign",
+    name: "Full Release Campaign",
+    description:
+      "Bundle SmartLink, launch prep, short-form guidance, and local STL release push.",
+    amountCents: 24900,
     currency: "usd",
   },
 ];

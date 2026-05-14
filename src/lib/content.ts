@@ -234,10 +234,10 @@ export const authPortals: AuthPortal[] = [
 ];
 
 export const promotionPackages = [
-  "Song release promotion",
-  "Album launch campaign",
-  "Event attendance push",
-  "Featured artist placement",
+  "SmartLink Setup",
+  "Launch Prep",
+  "Local STL Push",
+  "Full Release Campaign",
 ];
 
 export function getArtistBySlug(slug: string) {

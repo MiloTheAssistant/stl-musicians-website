@@ -112,6 +112,95 @@ export const promotionCampaigns = pgTable("promotion_campaigns", {
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
 });
 
+export const releaseLandingPages = pgTable("release_landing_pages", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  promotionCampaignId: uuid("promotion_campaign_id").references(
+    () => promotionCampaigns.id,
+  ),
+  releaseId: uuid("release_id").references(() => bandReleases.id),
+  slug: text("slug").notNull().unique(),
+  headline: text("headline").notNull(),
+  summary: text("summary").notNull(),
+  artworkUrl: text("artwork_url"),
+  isPublished: boolean("is_published").notNull().default(false),
+  fanCaptureEnabled: boolean("fan_capture_enabled").notNull().default(true),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+});
+
+export const releasePlatformLinks = pgTable("release_platform_links", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  releaseLandingPageId: uuid("release_landing_page_id").references(
+    () => releaseLandingPages.id,
+  ),
+  platform: text("platform").notNull(),
+  category: text("category").notNull(),
+  url: text("url").notNull(),
+  status: text("status").notNull().default("live"),
+  ctaLabel: text("cta_label").notNull(),
+  description: text("description"),
+  sortOrder: integer("sort_order").notNull().default(0),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+});
+
+export const promotionCampaignTasks = pgTable("promotion_campaign_tasks", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  promotionCampaignId: uuid("promotion_campaign_id").references(
+    () => promotionCampaigns.id,
+  ),
+  title: text("title").notNull(),
+  status: text("status").notNull().default("todo"),
+  owner: text("owner").notNull().default("stl-musicians"),
+  dueAt: timestamp("due_at", { withTimezone: true }),
+  packageIds: jsonb("package_ids").$type<string[]>().notNull().default([]),
+  guardrail: text("guardrail"),
+  requiresOfficialAccess: boolean("requires_official_access")
+    .notNull()
+    .default(false),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+});
+
+export const promotionFulfillmentNotes = pgTable("promotion_fulfillment_notes", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  promotionCampaignId: uuid("promotion_campaign_id").references(
+    () => promotionCampaigns.id,
+  ),
+  promotionCampaignTaskId: uuid("promotion_campaign_task_id").references(
+    () => promotionCampaignTasks.id,
+  ),
+  authorClerkUserId: text("author_clerk_user_id"),
+  note: text("note").notNull(),
+  proofUrl: text("proof_url"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+});
+
+export const promotionClickEvents = pgTable("promotion_click_events", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  releaseLandingPageId: uuid("release_landing_page_id").references(
+    () => releaseLandingPages.id,
+  ),
+  releaseSlug: text("release_slug").notNull(),
+  platformId: text("platform_id").notNull(),
+  source: text("source"),
+  referrer: text("referrer"),
+  userAgent: text("user_agent"),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+});
+
+export const promotionFanLeads = pgTable("promotion_fan_leads", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  releaseLandingPageId: uuid("release_landing_page_id").references(
+    () => releaseLandingPages.id,
+  ),
+  releaseSlug: text("release_slug").notNull(),
+  email: text("email").notNull(),
+  source: text("source"),
+  consent: boolean("consent").notNull().default(true),
+  createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+});
+
 export const stripeCustomers = pgTable("stripe_customers", {
   id: uuid("id").primaryKey().defaultRandom(),
   clerkUserId: text("clerk_user_id").notNull().unique(),

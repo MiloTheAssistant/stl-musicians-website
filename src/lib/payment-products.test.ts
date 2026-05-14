@@ -64,10 +64,22 @@ describe("payment products", () => {
 
   it("defines fixed server-owned promotion products", () => {
     expect(promotionProducts).toHaveLength(4);
-    expect(getPromotionProductById("song-release")).toMatchObject({
-      id: "song-release",
-      name: "Song release promotion",
+    expect(promotionProducts.map((product) => product.id)).toEqual([
+      "smartlink-setup",
+      "launch-prep",
+      "local-stl-push",
+      "full-release-campaign",
+    ]);
+    expect(getPromotionProductById("smartlink-setup")).toMatchObject({
+      id: "smartlink-setup",
+      name: "SmartLink Setup",
       amountCents: 4900,
+      currency: "usd",
+    });
+    expect(getPromotionProductById("full-release-campaign")).toMatchObject({
+      id: "full-release-campaign",
+      name: "Full Release Campaign",
+      amountCents: 24900,
       currency: "usd",
     });
     expect(() => getPromotionProductById("unknown")).toThrow(

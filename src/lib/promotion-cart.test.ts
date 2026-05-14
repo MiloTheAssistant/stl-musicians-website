@@ -9,18 +9,18 @@ import {
 describe("promotion cart", () => {
   it("adds duplicate products for one campaign by increasing quantity", () => {
     const items: PromotionCartItemInput[] = [
-      { productId: "song-release", campaignId: "case44-long-way-home", quantity: 1 },
+      { productId: "smartlink-setup", campaignId: "case44-long-way-home", quantity: 1 },
     ];
 
     const updated = addPromotionCartItem(items, {
-      productId: "song-release",
+      productId: "smartlink-setup",
       campaignId: "case44-long-way-home",
       quantity: 1,
     });
 
     expect(updated).toEqual([
       {
-        productId: "song-release",
+        productId: "smartlink-setup",
         campaignId: "case44-long-way-home",
         quantity: 2,
       },
@@ -31,13 +31,13 @@ describe("promotion cart", () => {
     const updated = addPromotionCartItem(
       [
         {
-          productId: "song-release",
+          productId: "smartlink-setup",
           campaignId: "case44-long-way-home",
           quantity: 1,
         },
       ],
       {
-        productId: "song-release",
+        productId: "smartlink-setup",
         campaignId: "case44-album-launch",
         quantity: 1,
       },
@@ -52,21 +52,21 @@ describe("promotion cart", () => {
 
   it("builds multi-item Stripe Checkout line items and cart totals", () => {
     const items: PromotionCartItemInput[] = [
-      { productId: "song-release", campaignId: "case44-long-way-home", quantity: 1 },
-      { productId: "album-launch", campaignId: "case44-long-way-home", quantity: 2 },
+      { productId: "smartlink-setup", campaignId: "case44-long-way-home", quantity: 1 },
+      { productId: "full-release-campaign", campaignId: "case44-long-way-home", quantity: 2 },
     ];
 
-    expect(getPromotionCartTotalCents(items)).toBe(24_700);
+    expect(getPromotionCartTotalCents(items)).toBe(54_700);
     expect(buildPromotionCartCheckoutLineItems(items)).toEqual([
       {
         price_data: {
           currency: "usd",
           product_data: {
-            name: "Song release promotion",
+            name: "SmartLink Setup",
             description:
-              "Boost a single song release across discovery and social placements.",
+              "Create the public release landing page, tracked outbound links, and fan capture path.",
             metadata: {
-              promotionProductId: "song-release",
+              promotionProductId: "smartlink-setup",
               promotionCampaignId: "case44-long-way-home",
             },
           },
@@ -78,15 +78,15 @@ describe("promotion cart", () => {
         price_data: {
           currency: "usd",
           product_data: {
-            name: "Album launch campaign",
+            name: "Full Release Campaign",
             description:
-              "Coordinate launch visibility for a full album or EP campaign.",
+              "Bundle SmartLink, launch prep, short-form guidance, and local STL release push.",
             metadata: {
-              promotionProductId: "album-launch",
+              promotionProductId: "full-release-campaign",
               promotionCampaignId: "case44-long-way-home",
             },
           },
-          unit_amount: 9_900,
+          unit_amount: 24_900,
         },
         quantity: 2,
       },

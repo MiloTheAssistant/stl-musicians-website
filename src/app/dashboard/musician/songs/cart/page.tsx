@@ -79,12 +79,12 @@ export default async function SongsCartPage() {
               Back to Songs Command Center
             </span>
           </ButtonLink>
-          <Eyebrow>Pump Up The Jams</Eyebrow>
+          <Eyebrow>Concierge packages</Eyebrow>
           <h1 className="mt-3 max-w-4xl text-4xl font-black leading-[0.98] sm:text-5xl lg:text-6xl">
             Campaign Cart
           </h1>
           <p className="mt-4 max-w-3xl text-[var(--muted)]">
-            Review multiple boost packages for one release push, then send the
+            Review multiple launch packages for one release push, then send the
             combined cart to Multi-item Stripe Checkout.
           </p>
         </div>
@@ -106,17 +106,18 @@ export default async function SongsCartPage() {
             </h2>
           </div>
           <ButtonLink href="/dashboard/musician/songs" variant="secondary">
-            Add more boosts
+            Add more packages
           </ButtonLink>
         </div>
 
         {displayItems.length === 0 ? (
           <div className="mt-6 rounded-md border border-dashed border-[var(--line)] bg-[rgba(245,234,210,0.04)] p-6">
             <ShoppingCart className="size-6 text-[var(--brass-light)]" aria-hidden />
-            <h3 className="mt-4 text-2xl font-black">No campaign boosts yet</h3>
+            <h3 className="mt-4 text-2xl font-black">No launch packages yet</h3>
             <p className="mt-2 max-w-2xl text-sm leading-6 text-[var(--muted)]">
-              Use Add 2 Campaign on the Songs Command Center to stack song,
-              album, event, and featured artist boosts before checkout.
+              Use Add package on the Songs Command Center to stack SmartLink
+              setup, launch prep, local STL push, and full campaign support
+              before checkout.
             </p>
           </div>
         ) : (

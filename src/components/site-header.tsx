@@ -17,7 +17,11 @@ export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-[var(--line)] bg-[rgba(17,17,15,0.88)] backdrop-blur">
       <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
-        <Link href="/" className="flex items-center gap-3" aria-label={`${siteConfig.name} home`}>
+        <Link
+          href="/"
+          className="flex min-w-0 flex-1 items-center gap-3"
+          aria-label={`${siteConfig.name} home`}
+        >
           <BrandLogo />
         </Link>
         <nav className="order-3 flex w-full items-center justify-center gap-1 md:order-none md:w-auto md:justify-start">
@@ -32,7 +36,7 @@ export function SiteHeader() {
             </Link>
           ))}
         </nav>
-        <div className="flex items-center gap-2">
+        <div className="order-4 flex w-full shrink-0 items-center justify-center gap-2 sm:order-none sm:w-auto">
           {hasClerkEnv ? (
             <Show
               when="signed-out"
@@ -52,10 +56,24 @@ export function SiteHeader() {
                 </>
               }
             >
-              <ButtonLink href="/dashboard">Sign-Up / Sign-In</ButtonLink>
+              <ButtonLink
+                href="/dashboard"
+                className="px-3 sm:px-4"
+                aria-label="Sign-Up / Sign-In"
+              >
+                <span className="sm:hidden">Sign-In</span>
+                <span className="hidden sm:inline">Sign-Up / Sign-In</span>
+              </ButtonLink>
             </Show>
           ) : (
-            <ButtonLink href="/dashboard">Sign-Up / Sign-In</ButtonLink>
+            <ButtonLink
+              href="/dashboard"
+              className="px-3 sm:px-4"
+              aria-label="Sign-Up / Sign-In"
+            >
+              <span className="sm:hidden">Sign-In</span>
+              <span className="hidden sm:inline">Sign-Up / Sign-In</span>
+            </ButtonLink>
           )}
         </div>
       </div>
