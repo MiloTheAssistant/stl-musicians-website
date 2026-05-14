@@ -17,6 +17,7 @@ import {
   getPlanById,
   type SubscriptionPlanId,
 } from "@/lib/subscription-plans";
+import { queuePromotionNotification } from "@/lib/promotion-notifications";
 
 function requireBillingInterval(value: FormDataEntryValue | null) {
   if (value === "monthly" || value === "yearly") {
@@ -149,6 +150,18 @@ export async function createPromotionCheckout(formData: FormData) {
     status: session.status ?? "open",
     amountTotalCents: session.amount_total,
     currency: session.currency,
+  });
+
+  queuePromotionNotification({
+    eventType: "checkout-started",
+    checkoutSessionId: session.id,
+    clerkUserId: user.id,
+    promotionPackage: product.name,
+    promotionProductId: product.id,
+    promotionCampaignId: campaignId,
+    source: "single",
+    amountCents: session.amount_total ?? product.amountCents,
+    currency: session.currency ?? product.currency,
   });
 
   redirect(requireStripeCheckoutUrl(session.url));

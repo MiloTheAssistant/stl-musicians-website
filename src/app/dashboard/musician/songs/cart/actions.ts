@@ -29,6 +29,7 @@ import {
 import { getStripe, getStripeConfig } from "@/lib/stripe-client";
 import { getOrCreateStripeCustomerForUser } from "@/lib/stripe-customers";
 import { getCase44DashboardBand } from "@/lib/band-dashboard";
+import { queuePromotionNotification } from "@/lib/promotion-notifications";
 import {
   canAccessBandWorkspace,
   getPrimaryEmail,
@@ -176,6 +177,21 @@ export async function createPromotionCartCheckout() {
       currency: session.currency,
     });
   }
+
+  queuePromotionNotification({
+    eventType: "checkout-started",
+    checkoutSessionId: session.id,
+    clerkUserId: user.id,
+    promotionPackage:
+      items.length === 1
+        ? getPromotionProductById(items[0].productId).name
+        : `${items.length} promotion packages`,
+    promotionCampaignId: scope.campaignId,
+    source: "cart",
+    amountCents: session.amount_total ?? getPromotionCartTotalCents(items),
+    currency: session.currency ?? "usd",
+    itemCount: items.length,
+  });
 
   if (!session.url) {
     throw new Error("Stripe did not return a checkout URL");

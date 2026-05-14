@@ -15,6 +15,7 @@ import {
   type PromotionCartItemInput,
 } from "./promotion-cart";
 import { activateFulfillmentForPaidProducts } from "./promotion-fulfillment";
+import { queuePromotionNotification } from "./promotion-notifications";
 import { getSongPromotionCampaignById } from "./song-promotion";
 
 export type PromotionCartScope = {
@@ -221,6 +222,14 @@ export async function recordPromotionCartOrderFromCheckout(
     return;
   }
 
+  const existingOrderItems = await getDb()
+    .select({ status: promotionOrderItems.status })
+    .from(promotionOrderItems)
+    .where(eq(promotionOrderItems.stripeCheckoutSessionId, session.id));
+  const shouldNotifyPayment =
+    existingOrderItems.length === 0 ||
+    existingOrderItems.some((item) => item.status !== "paid");
+
   await getDb()
     .delete(promotionOrderItems)
     .where(eq(promotionOrderItems.stripeCheckoutSessionId, session.id));
@@ -276,5 +285,30 @@ export async function recordPromotionCartOrderFromCheckout(
     if (campaign) {
       await activateFulfillmentForPaidProducts({ campaign, productIds });
     }
+  }
+
+  if (shouldNotifyPayment) {
+    queuePromotionNotification({
+      eventType: "payment-completed",
+      checkoutSessionId: session.id,
+      clerkUserId,
+      promotionPackage:
+        items.length === 1
+          ? items[0].promotionPackage
+          : `${items.length} promotion packages`,
+      promotionCampaignId: metadata.promotionCampaignId || null,
+      source: "cart",
+      amountCents:
+        session.amount_total ??
+        getPromotionCartTotalCents(
+          items.map((item) => ({
+            productId: item.promotionProductId,
+            campaignId: item.promotionCampaignId,
+            quantity: item.quantity,
+          })),
+        ),
+      currency: session.currency ?? items[0].currency,
+      itemCount: items.length,
+    });
   }
 }

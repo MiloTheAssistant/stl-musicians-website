@@ -9,6 +9,7 @@ import {
   stripeCustomers,
   stripeSubscriptions,
 } from "@/db/schema";
+import { queuePromotionNotification } from "./promotion-notifications";
 import { activateFulfillmentForPaidProducts } from "./promotion-fulfillment";
 import { getSongPromotionCampaignById } from "./song-promotion";
 import { getPlanById, type SubscriptionPlanId } from "./subscription-plans";
@@ -192,6 +193,12 @@ export async function recordPromotionPaymentFromCheckout(
 
   const paymentIntentId = stripeId(session.payment_intent);
   const promotionCampaignId = metadata.promotionCampaignId || null;
+  const [existingPayment] = await getDb()
+    .select({ status: promotionPayments.status })
+    .from(promotionPayments)
+    .where(eq(promotionPayments.stripeCheckoutSessionId, session.id))
+    .limit(1);
+  const shouldNotifyPayment = existingPayment?.status !== "paid";
 
   await getDb()
     .insert(promotionPayments)
@@ -232,6 +239,20 @@ export async function recordPromotionPaymentFromCheckout(
         productIds: [promotionProductId],
       });
     }
+  }
+
+  if (shouldNotifyPayment) {
+    queuePromotionNotification({
+      eventType: "payment-completed",
+      checkoutSessionId: session.id,
+      clerkUserId,
+      promotionPackage,
+      promotionProductId,
+      promotionCampaignId,
+      source: "single",
+      amountCents: session.amount_total,
+      currency: session.currency,
+    });
   }
 }
 
