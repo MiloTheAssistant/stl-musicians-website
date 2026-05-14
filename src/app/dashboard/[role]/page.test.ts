@@ -123,6 +123,9 @@ describe("RoleDashboardPage", () => {
     expect(text).toContain("Billing and Promotion Status");
     expect(text).toContain("Active subscriptions");
     expect(text).toContain("Paid promotions");
+    expect(text).toContain("Paid Package Activity");
+    expect(text).toContain("Stripe package purchases");
+    expect(text).toContain("No paid package activity yet");
     expect(text).toContain("Promotion Fulfillment");
     expect(text).toContain("Long Way Home release push");
     expect(text).toContain("SmartLink page setup");

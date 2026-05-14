@@ -31,6 +31,8 @@ import {
   getBillingSummaryForUser,
   getPaymentOperationsSummary,
 } from "@/lib/payment-records";
+import { formatCents } from "@/lib/payment-products";
+import { getPromotionOrderActivity } from "@/lib/promotion-order-activity";
 import {
   getReleaseSmartLinkPath,
   getSmartLinkReleaseForCampaign,
@@ -132,6 +134,8 @@ export default async function RoleDashboardPage({
     : null;
   const paymentOperations =
     role === "admin" ? await getPaymentOperationsSummary() : null;
+  const promotionOrderActivity =
+    role === "admin" ? await getPromotionOrderActivity() : [];
   const promotionFulfillment =
     role === "admin" && case44PromotionWorkspace
       ? [
@@ -483,6 +487,57 @@ export default async function RoleDashboardPage({
               </p>
             </article>
           </div>
+        </section>
+      )}
+      {role === "admin" && (
+        <section className="mt-10 rounded-lg border border-[var(--line)] bg-[var(--ink)] p-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <Eyebrow>Paid Package Activity</Eyebrow>
+              <h2 className="mt-2 text-3xl font-black">Stripe package purchases</h2>
+              <p className="mt-3 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+                Shows which Checkout purchase created fulfillment work, including
+                cart orders and one-package promotion checkouts.
+              </p>
+            </div>
+            <Tag>{promotionOrderActivity.length} recent</Tag>
+          </div>
+
+          {promotionOrderActivity.length === 0 ? (
+            <div className="mt-6 rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.04)] p-5 text-sm leading-6 text-[var(--muted)]">
+              No paid package activity yet.
+            </div>
+          ) : (
+            <div className="mt-6 divide-y divide-[var(--line)] rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.04)]">
+              {promotionOrderActivity.map((item) => (
+                <article
+                  key={item.id}
+                  className="grid gap-4 p-4 lg:grid-cols-[1fr_auto] lg:items-center"
+                >
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Tag>{item.source === "cart" ? "Cart order" : "Single package"}</Tag>
+                      <Tag>{item.status}</Tag>
+                      <Tag>{item.productId}</Tag>
+                    </div>
+                    <h3 className="mt-3 text-xl font-black">{item.packageName}</h3>
+                    <p className="mt-2 break-all text-sm leading-6 text-[var(--muted)]">
+                      Checkout session {item.stripeCheckoutSessionId}
+                      {item.campaignId ? ` / Campaign ${item.campaignId}` : ""}
+                    </p>
+                  </div>
+                  <div className="text-left lg:text-right">
+                    <p className="text-2xl font-black">
+                      {formatCents(item.amountCents)}
+                    </p>
+                    <p className="mt-1 text-xs font-bold uppercase text-[var(--brass-light)]">
+                      Qty {item.quantity} / {item.currency.toUpperCase()}
+                    </p>
+                  </div>
+                </article>
+              ))}
+            </div>
+          )}
         </section>
       )}
       {promotionFulfillment.length > 0 && (
