@@ -130,5 +130,7 @@ describe("RoleDashboardPage", () => {
     expect(text).toContain("No password collection");
     expect(text).toContain("Public SmartLink");
     expect(text).toContain("Manual status updates");
+    expect(text).toContain("Update status");
+    expect(text).toContain("Add fulfillment note");
   });
 });
