@@ -46,9 +46,3 @@ body {
     linear-gradient(135deg, #342019, #11110f 45%, #21314d);
 }
 
-.stage-visual {
-  background:
-    linear-gradient(115deg, rgba(181, 139, 42, 0.82) 0 14%, transparent 14.5%),
-    linear-gradient(145deg, rgba(75, 23, 28, 0.95) 0 42%, rgba(33, 49, 77, 0.9) 42.5% 68%, rgba(17, 17, 15, 0.95) 68.5%),
-    radial-gradient(circle at 20% 25%, rgba(216, 183, 101, 0.25), transparent 34%);
-}
