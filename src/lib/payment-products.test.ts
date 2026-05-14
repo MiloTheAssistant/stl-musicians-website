@@ -4,6 +4,7 @@ import {
   getPaidSubscriptionPlans,
   getPromotionProductById,
   getSubscriptionPriceId,
+  hasSubscriptionPriceIds,
   promotionProducts,
 } from "./payment-products";
 
@@ -44,6 +45,21 @@ describe("payment products", () => {
     expect(() => getSubscriptionPriceId("song", "monthly", {})).toThrow(
       "STRIPE_PRICE_SONG_MONTHLY is required",
     );
+  });
+
+  it("fails closed when a paid Stripe price variable is not a price ID", () => {
+    expect(() =>
+      getSubscriptionPriceId("song", "monthly", {
+        STRIPE_PRICE_SONG_MONTHLY: "sk_test_not_a_price",
+      }),
+    ).toThrow("STRIPE_PRICE_SONG_MONTHLY must be a Stripe price_ ID");
+    expect(hasSubscriptionPriceIds(stripePriceEnv)).toBe(true);
+    expect(
+      hasSubscriptionPriceIds({
+        ...stripePriceEnv,
+        STRIPE_PRICE_ALBUM_YEARLY: "sk_test_not_a_price",
+      }),
+    ).toBe(false);
   });
 
   it("defines fixed server-owned promotion products", () => {

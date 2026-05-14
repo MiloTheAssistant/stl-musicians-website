@@ -7,6 +7,7 @@ import {
 import {
   formatCents,
   getPaidSubscriptionPlans,
+  hasSubscriptionPriceIds,
   promotionProducts,
 } from "@/lib/payment-products";
 import { getPlanById } from "@/lib/subscription-plans";
@@ -22,6 +23,8 @@ export const metadata = {
 const hasStripeCheckoutEnv =
   Boolean(process.env.STRIPE_SECRET_KEY) &&
   Boolean(process.env.NEXT_PUBLIC_APP_URL);
+const hasSubscriptionCheckoutEnv =
+  hasStripeCheckoutEnv && hasSubscriptionPriceIds();
 
 export default function PricingPage() {
   const basicPlan = getPlanById("basic");
@@ -89,7 +92,7 @@ export default function PricingPage() {
               ))}
             </ul>
             <div className="mt-auto grid gap-3 pt-6 sm:grid-cols-2">
-              {hasStripeCheckoutEnv ? (
+              {hasSubscriptionCheckoutEnv ? (
                 <form action={createSubscriptionCheckout}>
                   <input type="hidden" name="planId" value={plan.id} />
                   <input type="hidden" name="billingInterval" value="monthly" />
@@ -109,7 +112,7 @@ export default function PricingPage() {
                   Monthly checkout
                 </button>
               )}
-              {hasStripeCheckoutEnv ? (
+              {hasSubscriptionCheckoutEnv ? (
                 <form action={createSubscriptionCheckout}>
                   <input type="hidden" name="planId" value={plan.id} />
                   <input type="hidden" name="billingInterval" value="yearly" />

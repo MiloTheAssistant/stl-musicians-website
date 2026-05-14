@@ -93,11 +93,29 @@ export function getSubscriptionPriceId(
     throw new Error(`${envKey} is required`);
   }
 
+  if (!isStripePriceId(priceId)) {
+    throw new Error(`${envKey} must be a Stripe price_ ID`);
+  }
+
   if (!getPlanById(planId)) {
     throw new Error(`Unknown subscription plan: ${planId}`);
   }
 
   return priceId;
+}
+
+export function isStripePriceId(value: string | undefined) {
+  return Boolean(value?.startsWith("price_"));
+}
+
+export function hasSubscriptionPriceIds(
+  env: Record<string, string | undefined> = process.env,
+) {
+  return getPaidSubscriptionPlans().every((plan) =>
+    (["monthly", "yearly"] as const).every((interval) =>
+      isStripePriceId(env[getSubscriptionPriceEnvKey(plan.id, interval)]),
+    ),
+  );
 }
 
 export function getPromotionProductById(productId: string) {
