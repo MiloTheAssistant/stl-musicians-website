@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  getFulfillmentTasksForPaidProducts,
   getFulfillmentTaskForCampaign,
   normalizeFulfillmentTaskStatus,
   promotionFulfillmentTaskStatuses,
@@ -27,5 +28,17 @@ describe("promotion fulfillment", () => {
 
     expect(task?.title).toBe("SmartLink page setup");
     expect(task?.guardrail).toContain("No password collection");
+  });
+
+  it("maps paid package ids to the fulfillment tasks that should start", () => {
+    const tasks = getFulfillmentTasksForPaidProducts(
+      "11111111-1111-4111-8111-111111111111",
+      ["smartlink-setup", "local-stl-push"],
+    );
+
+    expect(tasks.map((task) => task.title)).toEqual([
+      "SmartLink page setup",
+      "Local STL release push",
+    ]);
   });
 });

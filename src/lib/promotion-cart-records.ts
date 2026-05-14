@@ -14,6 +14,8 @@ import {
   removePromotionCartItem,
   type PromotionCartItemInput,
 } from "./promotion-cart";
+import { activateFulfillmentForPaidProducts } from "./promotion-fulfillment";
+import { getSongPromotionCampaignById } from "./song-promotion";
 
 export type PromotionCartScope = {
   clerkUserId: string;
@@ -254,4 +256,25 @@ export async function recordPromotionCartOrderFromCheckout(
       updatedAt: new Date(),
     })
     .where(eq(promotionCarts.id, promotionCartId));
+
+  const productIdsByCampaignId = new Map<string, string[]>();
+
+  for (const item of items) {
+    if (!item.promotionCampaignId) {
+      continue;
+    }
+
+    productIdsByCampaignId.set(item.promotionCampaignId, [
+      ...(productIdsByCampaignId.get(item.promotionCampaignId) ?? []),
+      item.promotionProductId,
+    ]);
+  }
+
+  for (const [campaignId, productIds] of productIdsByCampaignId) {
+    const campaign = getSongPromotionCampaignById(campaignId);
+
+    if (campaign) {
+      await activateFulfillmentForPaidProducts({ campaign, productIds });
+    }
+  }
 }

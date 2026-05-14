@@ -9,6 +9,8 @@ import {
   stripeCustomers,
   stripeSubscriptions,
 } from "@/db/schema";
+import { activateFulfillmentForPaidProducts } from "./promotion-fulfillment";
+import { getSongPromotionCampaignById } from "./song-promotion";
 import { getPlanById, type SubscriptionPlanId } from "./subscription-plans";
 
 export type CheckoutSessionKind = "subscription" | "promotion" | "promotion-cart";
@@ -221,6 +223,15 @@ export async function recordPromotionPaymentFromCheckout(
       .update(promotionCampaigns)
       .set({ status: "paid" })
       .where(eq(promotionCampaigns.id, promotionCampaignId));
+
+    const campaign = getSongPromotionCampaignById(promotionCampaignId);
+
+    if (campaign) {
+      await activateFulfillmentForPaidProducts({
+        campaign,
+        productIds: [promotionProductId],
+      });
+    }
   }
 }
 

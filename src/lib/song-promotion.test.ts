@@ -3,6 +3,7 @@ import {
   getCampaignFulfillmentTasks,
   getReleaseSmartLinkPath,
   getMissingAccountLinks,
+  getSongPromotionCampaignById,
   getSmartLinkReleaseBySlug,
   getSongPromotionWorkspaceForBand,
   songPromotionChannels,
@@ -14,6 +15,10 @@ describe("song promotion workspace", () => {
 
     expect(workspace?.bandSlug).toBe("case44");
     expect(workspace?.adminEmail).toBe("case44@stl-musicians.com");
+    expect(
+      getSongPromotionCampaignById("11111111-1111-4111-8111-111111111111")
+        ?.title,
+    ).toBe("Long Way Home release push");
     expect(workspace?.activeCampaign.goal).toBe("Release visibility");
     expect(workspace?.activeCampaign.release.title).toBe("Long Way Home");
     expect(workspace?.activeCampaign.paidBoostProductIds).toEqual([

@@ -484,6 +484,12 @@ export function getSongPromotionWorkspaceForBand(bandSlug: string) {
   return songPromotionWorkspaces.find((workspace) => workspace.bandSlug === bandSlug);
 }
 
+export function getSongPromotionCampaignById(campaignId: string) {
+  return songPromotionWorkspaces
+    .map((workspace) => workspace.activeCampaign)
+    .find((campaign) => campaign.id === campaignId);
+}
+
 export function getPublishedSmartLinkReleases() {
   return smartLinkReleases;
 }

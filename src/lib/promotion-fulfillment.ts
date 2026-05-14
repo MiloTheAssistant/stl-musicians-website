@@ -44,18 +44,32 @@ export function getFulfillmentTaskForCampaign(
   return getCampaignFulfillmentTasks(campaignId).find((task) => task.id === taskId);
 }
 
+export function getFulfillmentTasksForPaidProducts(
+  campaignId: string,
+  productIds: string[],
+) {
+  const paidProductIds = new Set(productIds.filter(Boolean));
+
+  return getCampaignFulfillmentTasks(campaignId).filter((task) =>
+    task.packageIds.some((packageId) => paidProductIds.has(packageId)),
+  );
+}
+
 function hasDatabase() {
   return hasDatabaseUrl();
 }
 
-async function ensureCampaignRecord(campaign: SongPromotionCampaign) {
+async function ensureCampaignRecord(
+  campaign: SongPromotionCampaign,
+  status: SongPromotionCampaign["status"] = campaign.status,
+) {
   await getDb()
     .insert(promotionCampaigns)
     .values({
       id: campaign.id,
       title: campaign.title,
       campaignType: campaign.promotionCampaignType,
-      status: campaign.status,
+      status,
       budgetCents: campaign.budgetCents,
       channels: campaign.channels,
     })
@@ -64,11 +78,41 @@ async function ensureCampaignRecord(campaign: SongPromotionCampaign) {
       set: {
         title: campaign.title,
         campaignType: campaign.promotionCampaignType,
-        status: campaign.status,
+        status,
         budgetCents: campaign.budgetCents,
         channels: campaign.channels,
       },
     });
+}
+
+export async function activateFulfillmentForPaidProducts({
+  campaign,
+  productIds,
+}: {
+  campaign: SongPromotionCampaign;
+  productIds: string[];
+}) {
+  if (!hasDatabase()) {
+    return [];
+  }
+
+  const tasks = getFulfillmentTasksForPaidProducts(campaign.id, productIds);
+
+  await ensureCampaignRecord(campaign, "paid");
+
+  const records = [];
+
+  for (const task of tasks) {
+    records.push(
+      await saveCampaignFulfillmentTaskStatus({
+        campaign: { ...campaign, status: "paid" },
+        task,
+        status: task.status,
+      }),
+    );
+  }
+
+  return records;
 }
 
 export async function getCampaignFulfillmentTasksWithOverrides(
