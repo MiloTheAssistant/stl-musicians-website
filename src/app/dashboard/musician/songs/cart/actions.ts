@@ -4,9 +4,7 @@ import { currentUser, type User } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
 import {
-  findStripeCustomerByClerkUserId,
   recordCheckoutSession,
-  upsertStripeCustomerRecord,
 } from "@/lib/payment-records";
 import { getPromotionProductById } from "@/lib/payment-products";
 import {
@@ -29,53 +27,13 @@ import {
   type PromotionCartScope,
 } from "@/lib/promotion-cart-records";
 import { getStripe, getStripeConfig } from "@/lib/stripe-client";
+import { getOrCreateStripeCustomerForUser } from "@/lib/stripe-customers";
 import { getCase44DashboardBand } from "@/lib/band-dashboard";
 import {
   canAccessBandWorkspace,
   getPrimaryEmail,
 } from "@/lib/dashboard-access";
 import { getSongPromotionWorkspaceForBand } from "@/lib/song-promotion";
-
-function getUserEmail(user: User) {
-  const email =
-    user.primaryEmailAddress?.emailAddress ??
-    user.emailAddresses.find((item) => item.emailAddress)?.emailAddress;
-
-  if (!email) {
-    throw new Error("A verified email address is required for checkout");
-  }
-
-  return email;
-}
-
-function getUserName(user: User) {
-  return user.fullName ?? user.username ?? user.firstName ?? null;
-}
-
-async function getOrCreateStripeCustomer(user: User) {
-  const existing = await findStripeCustomerByClerkUserId(user.id);
-
-  if (existing) {
-    return existing.stripeCustomerId;
-  }
-
-  const customer = await getStripe().customers.create({
-    email: getUserEmail(user),
-    name: getUserName(user) ?? undefined,
-    metadata: {
-      clerkUserId: user.id,
-    },
-  });
-
-  await upsertStripeCustomerRecord({
-    clerkUserId: user.id,
-    email: getUserEmail(user),
-    name: getUserName(user),
-    stripeCustomerId: customer.id,
-  });
-
-  return customer.id;
-}
 
 async function requireCase44CartScope(): Promise<{
   user: User;
@@ -183,7 +141,7 @@ export async function createPromotionCartCheckout() {
   }
 
   const { appUrl } = getStripeConfig();
-  const stripeCustomerId = await getOrCreateStripeCustomer(user);
+  const stripeCustomerId = await getOrCreateStripeCustomerForUser(user);
   const session = await getStripe().checkout.sessions.create({
     mode: "payment",
     customer: stripeCustomerId,

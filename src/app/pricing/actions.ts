@@ -2,11 +2,9 @@
 
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import type { User } from "@clerk/nextjs/server";
 import {
-  findStripeCustomerByClerkUserId,
   recordCheckoutSession,
-  upsertStripeCustomerRecord,
+  findStripeCustomerByClerkUserId,
 } from "@/lib/payment-records";
 import {
   getPromotionProductById,
@@ -14,26 +12,11 @@ import {
   type BillingInterval,
 } from "@/lib/payment-products";
 import { getStripe, getStripeConfig } from "@/lib/stripe-client";
+import { getOrCreateStripeCustomerForUser } from "@/lib/stripe-customers";
 import {
   getPlanById,
   type SubscriptionPlanId,
 } from "@/lib/subscription-plans";
-
-function getUserEmail(user: User) {
-  const email =
-    user.primaryEmailAddress?.emailAddress ??
-    user.emailAddresses.find((item) => item.emailAddress)?.emailAddress;
-
-  if (!email) {
-    throw new Error("A verified email address is required for checkout");
-  }
-
-  return email;
-}
-
-function getUserName(user: User) {
-  return user.fullName ?? user.username ?? user.firstName ?? null;
-}
 
 function requireBillingInterval(value: FormDataEntryValue | null) {
   if (value === "monthly" || value === "yearly") {
@@ -61,31 +44,6 @@ async function requireSignedInUser() {
   return user;
 }
 
-async function getOrCreateStripeCustomer(user: User) {
-  const existing = await findStripeCustomerByClerkUserId(user.id);
-
-  if (existing) {
-    return existing.stripeCustomerId;
-  }
-
-  const customer = await getStripe().customers.create({
-    email: getUserEmail(user),
-    name: getUserName(user) ?? undefined,
-    metadata: {
-      clerkUserId: user.id,
-    },
-  });
-
-  await upsertStripeCustomerRecord({
-    clerkUserId: user.id,
-    email: getUserEmail(user),
-    name: getUserName(user),
-    stripeCustomerId: customer.id,
-  });
-
-  return customer.id;
-}
-
 function requireStripeCheckoutUrl(url: string | null) {
   if (!url) {
     throw new Error("Stripe did not return a checkout URL");
@@ -100,7 +58,7 @@ export async function createSubscriptionCheckout(formData: FormData) {
   const billingInterval = requireBillingInterval(formData.get("billingInterval"));
   const priceId = getSubscriptionPriceId(planId, billingInterval);
   const { appUrl } = getStripeConfig();
-  const stripeCustomerId = await getOrCreateStripeCustomer(user);
+  const stripeCustomerId = await getOrCreateStripeCustomerForUser(user);
 
   const session = await getStripe().checkout.sessions.create({
     mode: "subscription",
@@ -152,7 +110,7 @@ export async function createPromotionCheckout(formData: FormData) {
       ? promotionCampaignId
       : null;
   const { appUrl } = getStripeConfig();
-  const stripeCustomerId = await getOrCreateStripeCustomer(user);
+  const stripeCustomerId = await getOrCreateStripeCustomerForUser(user);
 
   const session = await getStripe().checkout.sessions.create({
     mode: "payment",
