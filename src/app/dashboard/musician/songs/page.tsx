@@ -30,6 +30,7 @@ import {
   type CampaignFulfillmentTask,
   type PromotionActionStatus,
 } from "@/lib/song-promotion";
+import { getSmartLinkAnalyticsSummary } from "@/lib/song-promotion-analytics";
 import { addPromotionToCart } from "./cart/actions";
 
 const hasClerkEnv =
@@ -77,6 +78,16 @@ export default async function SongsDashboardPage() {
   );
   const smartLinkRelease = getSmartLinkReleaseForCampaign(activeCampaign.id);
   const fulfillmentTasks = getCampaignFulfillmentTasks(activeCampaign.id);
+  const nextTask =
+    fulfillmentTasks.find((task) => task.status !== "done") ?? fulfillmentTasks[0];
+  const smartLinkAnalytics = smartLinkRelease
+    ? await getSmartLinkAnalyticsSummary({
+        releaseSlug: smartLinkRelease.slug,
+        platformIds: smartLinkRelease.destinationLinks.map((link) => link.id),
+        packageStatus: activeCampaign.status,
+        nextAction: nextTask?.title ?? "Review campaign plan",
+      })
+    : null;
 
   return (
     <SectionShell>
@@ -166,6 +177,71 @@ export default async function SongsDashboardPage() {
           </div>
         </div>
       </section>
+
+      {smartLinkRelease && smartLinkAnalytics ? (
+        <section className="mt-6 rounded-lg border border-[var(--line)] bg-[rgba(245,234,210,0.04)] p-5 sm:p-6">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <Eyebrow>SmartLink Analytics</Eyebrow>
+              <h2 className="mt-2 text-3xl font-black">Campaign performance</h2>
+            </div>
+            <ButtonLink
+              href={getReleaseSmartLinkPath(smartLinkRelease)}
+              variant="secondary"
+            >
+              View SmartLink
+            </ButtonLink>
+          </div>
+          <div className="mt-5 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+            <article className="rounded-md border border-[var(--line)] bg-[rgba(9,9,7,0.35)] p-4">
+              <p className="text-sm text-[var(--muted)]">Total clicks</p>
+              <p className="mt-2 text-3xl font-black">
+                {smartLinkAnalytics.totalClicks}
+              </p>
+            </article>
+            <article className="rounded-md border border-[var(--line)] bg-[rgba(9,9,7,0.35)] p-4">
+              <p className="text-sm text-[var(--muted)]">Fan captures</p>
+              <p className="mt-2 text-3xl font-black">
+                {smartLinkAnalytics.fanCaptureCount}
+              </p>
+            </article>
+            <article className="rounded-md border border-[var(--line)] bg-[rgba(9,9,7,0.35)] p-4">
+              <p className="text-sm text-[var(--muted)]">Package status</p>
+              <p className="mt-2 text-3xl font-black">
+                {statusLabel(smartLinkAnalytics.packageStatus as PromotionActionStatus)}
+              </p>
+            </article>
+            <article className="rounded-md border border-[var(--line)] bg-[rgba(9,9,7,0.35)] p-4">
+              <p className="text-sm text-[var(--muted)]">Next action</p>
+              <p className="mt-2 text-lg font-black">
+                {smartLinkAnalytics.nextAction}
+              </p>
+            </article>
+          </div>
+          <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+            {smartLinkAnalytics.clicksByPlatform.map((item) => {
+              const link = smartLinkRelease.destinationLinks.find(
+                (destination) => destination.id === item.platformId,
+              );
+
+              return (
+                <article
+                  key={item.platformId}
+                  className="rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.04)] p-4"
+                >
+                  <p className="text-sm font-bold">
+                    {link?.platform ?? item.platformId}
+                  </p>
+                  <p className="mt-2 text-2xl font-black">{item.clicks}</p>
+                  <p className="mt-1 text-xs font-bold uppercase text-[var(--brass-light)]">
+                    Platform clicks
+                  </p>
+                </article>
+              );
+            })}
+          </div>
+        </section>
+      ) : null}
 
       <div className="mt-6 grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
         <section className="rounded-lg border border-[var(--line)] bg-[var(--ink)] p-5 sm:p-6">

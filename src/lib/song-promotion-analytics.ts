@@ -1,3 +1,8 @@
+import { eq } from "drizzle-orm";
+import { getDb } from "@/db";
+import { hasDatabaseUrl } from "@/db/env";
+import { promotionClickEvents, promotionFanLeads } from "@/db/schema";
+
 export type PromotionClickEventInput = {
   releaseSlug: string;
   platformId: string;
@@ -27,6 +32,27 @@ export type NormalizedFanLead = {
   source: string | null;
 };
 
+export type SmartLinkAnalyticsInput = {
+  releaseSlug: string;
+  platformIds: string[];
+  packageStatus: string;
+  nextAction: string;
+  clicks: Array<{ platformId: string }>;
+  fanLeads: Array<{ email: string }>;
+};
+
+export type SmartLinkAnalyticsSummary = {
+  releaseSlug: string;
+  totalClicks: number;
+  fanCaptureCount: number;
+  packageStatus: string;
+  nextAction: string;
+  clicksByPlatform: Array<{
+    platformId: string;
+    clicks: number;
+  }>;
+};
+
 export function buildPromotionClickEvent(
   input: PromotionClickEventInput,
 ): PromotionClickEvent {
@@ -52,4 +78,63 @@ export function normalizeFanLeadInput(input: FanLeadInput): NormalizedFanLead {
     email,
     source: input.source?.trim() || null,
   };
+}
+
+export function summarizeSmartLinkAnalytics(
+  input: SmartLinkAnalyticsInput,
+): SmartLinkAnalyticsSummary {
+  return {
+    releaseSlug: input.releaseSlug,
+    totalClicks: input.clicks.length,
+    fanCaptureCount: input.fanLeads.length,
+    packageStatus: input.packageStatus,
+    nextAction: input.nextAction,
+    clicksByPlatform: input.platformIds.map((platformId) => ({
+      platformId,
+      clicks: input.clicks.filter((click) => click.platformId === platformId).length,
+    })),
+  };
+}
+
+export async function getSmartLinkAnalyticsSummary({
+  releaseSlug,
+  platformIds,
+  packageStatus,
+  nextAction,
+}: {
+  releaseSlug: string;
+  platformIds: string[];
+  packageStatus: string;
+  nextAction: string;
+}) {
+  if (!hasDatabaseUrl()) {
+    return summarizeSmartLinkAnalytics({
+      releaseSlug,
+      platformIds,
+      packageStatus,
+      nextAction,
+      clicks: [],
+      fanLeads: [],
+    });
+  }
+
+  const [clicks, fanLeads] = await Promise.all([
+    getDb()
+      .select({ platformId: promotionClickEvents.platformId })
+      .from(promotionClickEvents)
+      .where(eq(promotionClickEvents.releaseSlug, releaseSlug)),
+    getDb()
+      .select({ email: promotionFanLeads.email })
+      .from(promotionFanLeads)
+      .where(eq(promotionFanLeads.releaseSlug, releaseSlug)),
+  ]);
+
+  return summarizeSmartLinkAnalytics({
+    releaseSlug,
+    platformIds,
+    packageStatus,
+    nextAction,
+    clicks,
+    fanLeads,
+  });
 }

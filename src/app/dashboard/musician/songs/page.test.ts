@@ -84,6 +84,11 @@ describe("SongsDashboardPage", () => {
     expect(text).toContain("Add package");
     expect(text).toContain("Public SmartLink");
     expect(text).toContain("STL-Musicians ops checklist");
+    expect(text).toContain("SmartLink Analytics");
+    expect(text).toContain("Total clicks");
+    expect(text).toContain("Fan captures");
+    expect(text).toContain("Package status");
+    expect(text).toContain("Next action");
     expect(text).toContain("Case44 admin");
     expect(text).toContain("case44@stl-musicians.com");
     expect(text).toContain("OAuth later");
