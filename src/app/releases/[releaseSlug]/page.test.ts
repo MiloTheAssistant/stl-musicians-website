@@ -63,6 +63,11 @@ describe("ReleaseSmartLinkPage", () => {
     expect(text).toContain("No passwords. No guaranteed playlist claims.");
     expect(text).toContain("Featured STL release");
     expect(text).toContain("Built for fans, venues, and launch-day sharing.");
+    expect(text).toContain("Launch path");
+    expect(text).toContain("Authorized handoffs");
+    expect(text).toContain("Fan update desk");
+    expect(text).toContain("STL release circuit");
+    expect(text).toContain("Managed guardrails");
     expect(
       collectElementsWithProp(page, "src", "/images/hero-ai-01.png"),
     ).toHaveLength(1);

@@ -35,12 +35,16 @@ export function Eyebrow({ children }: { children: React.ReactNode }) {
 export function SectionShell({
   children,
   className,
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) {
+  ...props
+}: ComponentProps<"section">) {
   return (
-    <section className={cn("mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8", className)}>
+    <section
+      className={cn(
+        "mx-auto w-full max-w-7xl px-4 py-16 sm:px-6 lg:px-8",
+        className,
+      )}
+      {...props}
+    >
       {children}
     </section>
   );
