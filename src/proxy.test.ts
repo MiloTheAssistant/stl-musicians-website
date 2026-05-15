@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { getCanonicalRedirectUrl, isProtectedDashboardPath } from "./proxy";
+import {
+  getCanonicalRedirectUrl,
+  isProtectedDashboardPath,
+  shouldRunClerkProtection,
+} from "./proxy";
 
 describe("proxy dashboard protection", () => {
   it("keeps the dashboard access landing page public", () => {
@@ -8,6 +12,13 @@ describe("proxy dashboard protection", () => {
     expect(isProtectedDashboardPath("/dashboard/promoter")).toBe(true);
     expect(isProtectedDashboardPath("/dashboard/member")).toBe(true);
     expect(isProtectedDashboardPath("/dashboard/admin")).toBe(true);
+  });
+
+  it("runs Clerk protection only for protected dashboard workspaces", () => {
+    expect(shouldRunClerkProtection("/")).toBe(false);
+    expect(shouldRunClerkProtection("/musicians")).toBe(false);
+    expect(shouldRunClerkProtection("/dashboard")).toBe(false);
+    expect(shouldRunClerkProtection("/dashboard/musician")).toBe(true);
   });
 });
 

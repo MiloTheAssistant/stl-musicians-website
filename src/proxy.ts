@@ -1,5 +1,5 @@
 import { clerkMiddleware } from "@clerk/nextjs/server";
-import { NextResponse } from "next/server";
+import { NextResponse, type NextFetchEvent, type NextRequest } from "next/server";
 
 const canonicalHost = "stl-musicians.com";
 const fallbackHosts = new Set(["stl-musicians-website.vercel.app"]);
@@ -25,35 +25,32 @@ const hasClerkEnv =
   Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
   Boolean(process.env.CLERK_SECRET_KEY);
 
-export const proxy = hasClerkEnv
-  ? clerkMiddleware(async (auth, req) => {
-      const canonicalUrl = getCanonicalRedirectUrl(
-        req.url,
-        req.headers.get("host") ?? undefined,
-      );
+export function shouldRunClerkProtection(pathname: string) {
+  return isProtectedDashboardPath(pathname);
+}
 
-      if (canonicalUrl) {
-        return NextResponse.redirect(canonicalUrl);
-      }
+const protectedDashboardProxy = clerkMiddleware(async (auth, req) => {
+  await auth.protect({
+    unauthenticatedUrl: new URL("/sign-in", req.url).toString(),
+  });
+});
 
-      if (hasClerkEnv && isProtectedDashboardPath(req.nextUrl.pathname)) {
-        await auth.protect({
-          unauthenticatedUrl: new URL("/sign-in", req.url).toString(),
-        });
-      }
-    })
-  : function proxy(req: { headers: Headers; url: string }) {
-      const canonicalUrl = getCanonicalRedirectUrl(
-        req.url,
-        req.headers.get("host") ?? undefined,
-      );
+export function proxy(req: NextRequest, event: NextFetchEvent) {
+  const canonicalUrl = getCanonicalRedirectUrl(
+    req.url,
+    req.headers.get("host") ?? undefined,
+  );
 
-      if (canonicalUrl) {
-        return NextResponse.redirect(canonicalUrl);
-      }
+  if (canonicalUrl) {
+    return NextResponse.redirect(canonicalUrl);
+  }
 
-      return NextResponse.next();
-    };
+  if (hasClerkEnv && shouldRunClerkProtection(req.nextUrl.pathname)) {
+    return protectedDashboardProxy(req, event);
+  }
+
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: [

@@ -1,3 +1,5 @@
+"use client";
+
 import { Show, SignOutButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { CalendarDays, MapPin, Music2 } from "lucide-react";

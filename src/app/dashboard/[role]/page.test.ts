@@ -81,6 +81,15 @@ describe("RoleDashboardPage", () => {
     expect(text).toContain("Preview access");
     expect(text).toContain("Local preview session");
     expect(text).toContain("Case44 Workspace");
+    expect(text).toContain("Command Console");
+    expect(text).toContain("Dashboard management");
+    expect(text).toContain("Events Calendar");
+    expect(text).toContain("Campaign intake");
+    expect(text).toContain("Release title");
+    expect(text).toContain("Release date");
+    expect(text).toContain("Platform links");
+    expect(text).toContain("Package intent");
+    expect(text).toContain("Public SmartLink publishing remains controlled");
     expect(text).toContain("Songs Promoted");
     expect(text).toContain("Social Media Impact");
     expect(text).toContain("Next 14 Days");

@@ -18,9 +18,12 @@ export const userRoleEnum = pgEnum("user_role", [
 
 export const campaignStatusEnum = pgEnum("campaign_status", [
   "draft",
+  "submitted",
+  "needs_review",
   "requested",
   "approved",
   "paid",
+  "in_fulfillment",
   "scheduled",
   "completed",
 ]);
@@ -109,7 +112,11 @@ export const promotionCampaigns = pgTable("promotion_campaigns", {
   status: campaignStatusEnum("status").notNull().default("draft"),
   budgetCents: integer("budget_cents"),
   channels: jsonb("channels").$type<string[]>().notNull().default([]),
+  packageIntent: text("package_intent"),
+  localTieIns: text("local_tie_ins"),
+  artistNotes: text("artist_notes"),
   createdAt: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
 
 export const releaseLandingPages = pgTable("release_landing_pages", {

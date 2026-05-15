@@ -3,23 +3,33 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import {
   BarChart3,
-  Bot,
   CalendarPlus,
   CheckCircle2,
   CreditCard,
   ExternalLink,
   Globe2,
+  HelpCircle,
+  LayoutDashboard,
+  Link2,
   Mail,
   Megaphone,
   Music2,
   Package,
   ReceiptText,
+  Save,
   Search,
+  Send,
   ShieldCheck,
   Star,
 } from "lucide-react";
 import { ButtonLink, Eyebrow, SectionShell, Tag } from "@/components/ui";
 import { getCase44DashboardBand } from "@/lib/band-dashboard";
+import {
+  campaignIntakeStatusLabels,
+  campaignIntakeStatuses,
+  getCampaignIntakeForBand,
+  type CampaignIntakeDraft,
+} from "@/lib/campaign-intake";
 import { artistProfiles, events, promotionPackages } from "@/lib/content";
 import {
   canAccessBandWorkspace,
@@ -49,6 +59,7 @@ import {
   storageArchitecture,
 } from "@/lib/subscription-plans";
 import { createCustomerPortalSession } from "@/app/pricing/actions";
+import { saveCampaignIntakeAction } from "./campaign-intake-actions";
 import {
   addPromotionFulfillmentNote,
   updatePromotionFulfillmentTaskStatus,
@@ -77,9 +88,50 @@ const dashboardCards = {
   ],
 } as const;
 
+const commandConsoleIcons = {
+  Website: Globe2,
+  Songs: Music2,
+  Social: Megaphone,
+  "Events Calendar": CalendarPlus,
+  Merch: Package,
+  Billing: CreditCard,
+} as const;
+
+const packageIntentOptions = [
+  "SmartLink setup",
+  "Launch prep",
+  "Local STL push",
+  "Full release campaign",
+] as const;
+
 const hasClerkEnv =
   Boolean(process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY) &&
   Boolean(process.env.CLERK_SECRET_KEY);
+
+function getCampaignLinkValue(
+  campaignIntake: CampaignIntakeDraft,
+  fieldName: CampaignIntakeDraft["platformLinks"][number]["fieldName"],
+) {
+  return campaignIntake.platformLinks.find((link) => link.fieldName === fieldName)?.url ?? "";
+}
+
+function getCampaignNotice(value: string | string[] | undefined) {
+  const status = Array.isArray(value) ? value[0] : value;
+
+  if (status === "saved") {
+    return "Campaign draft saved for dashboard review.";
+  }
+
+  if (status === "submitted") {
+    return "Campaign submitted for STL-Musicians review.";
+  }
+
+  if (status === "invalid") {
+    return "Campaign intake needs a required field before it can be saved.";
+  }
+
+  return null;
+}
 
 export async function generateMetadata({
   params,
@@ -95,10 +147,13 @@ export async function generateMetadata({
 
 export default async function RoleDashboardPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ role: string }>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const { role } = await params;
+  const query = searchParams ? await searchParams : {};
 
   if (!isKnownRole(role)) {
     notFound();
@@ -129,6 +184,10 @@ export default async function RoleDashboardPage({
   const activePlan = musicianDashboardBand
     ? getPlanById(musicianDashboardBand.activePlanId)
     : null;
+  const campaignIntake = musicianDashboardBand
+    ? await getCampaignIntakeForBand(musicianDashboardBand.slug)
+    : null;
+  const campaignNotice = getCampaignNotice(query.campaign);
   const billingSummary = musicianDashboardBand
     ? await getBillingSummaryForUser(viewerClerkUserId)
     : null;
@@ -178,15 +237,31 @@ export default async function RoleDashboardPage({
           </h1>
           <p className="mt-4 max-w-2xl text-[var(--muted)]">{config.description}</p>
         </div>
-        <div className="rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.06)] px-4 py-3 text-sm lg:justify-self-end">
-          <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-[var(--brass-light)]">
-            Account
-          </p>
-          <p className="mt-1 text-xs font-semibold uppercase text-[var(--muted)]">
-            Workspace access
-          </p>
-          <p className="mt-1 font-bold">{viewerAccess.label}</p>
-          <p className="break-words text-[var(--muted)]">{viewerAccess.detail}</p>
+        <div className="grid gap-3 lg:justify-self-end">
+          <div className="rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.06)] px-4 py-3 text-sm">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-[var(--brass-light)]">
+              Account
+            </p>
+            <p className="mt-1 text-xs font-semibold uppercase text-[var(--muted)]">
+              Workspace access
+            </p>
+            <p className="mt-1 font-bold">{viewerAccess.label}</p>
+            <p className="break-words text-[var(--muted)]">{viewerAccess.detail}</p>
+          </div>
+          {musicianDashboardBand && (
+            <div
+              id="help"
+              className="rounded-md border border-[var(--line)] bg-[rgba(33,49,77,0.28)] px-4 py-3 text-sm"
+            >
+              <span className="inline-flex items-center gap-2 font-bold">
+                <HelpCircle className="size-4 text-[var(--brass-light)]" aria-hidden />
+                Help
+              </span>
+              <span className="mt-1 block text-[var(--muted)]">
+                Dashboard tips, subscription guidance, and campaign intake support.
+              </span>
+            </div>
+          )}
         </div>
       </div>
       {musicianDashboardBand && (
@@ -244,19 +319,51 @@ export default async function RoleDashboardPage({
             </div>
           </div>
           <div className="p-5">
-            <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-              {musicianDashboardBand.navigation.map((item) => (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  className="rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.04)] p-4 transition hover:bg-[rgba(245,234,210,0.08)]"
-                >
-                  <p className="font-bold">{item.label}</p>
-                  <p className="mt-2 text-sm leading-6 text-[var(--muted)]">
-                    {item.description}
+            <div className="rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.04)] p-4 sm:p-5">
+              <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+                <div>
+                  <Eyebrow>Dashboard management</Eyebrow>
+                  <h3 className="mt-2 text-2xl font-black">Command Console</h3>
+                  <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+                    These controls are where the artist workspace is managed:
+                    publishing review, song campaigns, social impact, Events Calendar,
+                    merch, and billing.
                   </p>
-                </a>
-              ))}
+                </div>
+                <Tag>Managed in dashboard</Tag>
+              </div>
+              <div className="mt-5 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+                {musicianDashboardBand.navigation.map((item) => {
+                  const Icon =
+                    commandConsoleIcons[
+                      item.label as keyof typeof commandConsoleIcons
+                    ] ?? LayoutDashboard;
+
+                  return (
+                    <a
+                      key={item.label}
+                      href={item.href}
+                      className="group rounded-md border border-[var(--line)] bg-[rgba(9,9,7,0.32)] p-4 transition hover:border-[rgba(219,174,75,0.65)] hover:bg-[rgba(245,234,210,0.08)]"
+                    >
+                      <span className="flex items-center justify-between gap-3">
+                        <span className="inline-flex items-center gap-2 font-bold">
+                          <Icon
+                            className="size-4 text-[var(--brass-light)]"
+                            aria-hidden
+                          />
+                          {item.label}
+                        </span>
+                        <span className="font-mono text-xs font-bold uppercase text-[var(--brass-light)] opacity-80">
+                          Manage
+                        </span>
+                      </span>
+                      <span className="mt-2 block text-sm leading-6 text-[var(--muted)]">
+                        {item.description}
+                      </span>
+                    </a>
+                  );
+                })}
+              </div>
             </div>
 
             <div className="mt-6 grid gap-4 md:grid-cols-3">
@@ -274,6 +381,212 @@ export default async function RoleDashboardPage({
                 </article>
               ))}
             </div>
+
+            {campaignIntake && (
+              <section
+                id="campaign-intake"
+                className="mt-6 rounded-md border border-[var(--line)] bg-[rgba(33,49,77,0.25)] p-5"
+              >
+                <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_320px]">
+                  <div>
+                    <Eyebrow>Artist campaign intake</Eyebrow>
+                    <h3 className="mt-2 text-2xl font-black">Campaign intake</h3>
+                    <p className="mt-2 max-w-3xl text-sm leading-6 text-[var(--muted)]">
+                      Update the active Case44 campaign details before STL-Musicians
+                      reviews, packages, and publishes anything public.
+                    </p>
+                    <p className="mt-3 text-sm font-semibold text-[var(--brass-light)]">
+                      Public SmartLink publishing remains controlled by STL-Musicians;
+                      dashboard drafts stay private until review.
+                    </p>
+                    {campaignNotice && (
+                      <div className="mt-4 rounded-md border border-[rgba(219,174,75,0.45)] bg-[rgba(219,174,75,0.12)] px-4 py-3 text-sm font-semibold">
+                        {campaignNotice}
+                      </div>
+                    )}
+                  </div>
+                  <div className="rounded-md border border-[var(--line)] bg-[rgba(9,9,7,0.35)] p-4">
+                    <p className="font-mono text-xs font-bold uppercase tracking-[0.16em] text-[var(--brass-light)]">
+                      Review status
+                    </p>
+                    <p className="mt-2 text-2xl font-black">
+                      {campaignIntakeStatusLabels[campaignIntake.status]}
+                    </p>
+                    <div className="mt-4 grid gap-2">
+                      {campaignIntakeStatuses
+                        .filter((status) => status !== "draft")
+                        .map((status) => (
+                          <div
+                            key={status}
+                            className="flex items-center justify-between rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.04)] px-3 py-2 text-sm"
+                          >
+                            <span>{campaignIntakeStatusLabels[status]}</span>
+                            <Tag>
+                              {campaignIntake.status === status ? "Current" : "Queue"}
+                            </Tag>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                </div>
+
+                <form action={saveCampaignIntakeAction} className="mt-6 grid gap-5">
+                  <input
+                    type="hidden"
+                    name="campaignId"
+                    value={campaignIntake.campaignId}
+                  />
+                  <input type="hidden" name="status" value={campaignIntake.status} />
+                  <div className="grid gap-4 lg:grid-cols-2">
+                    <label className="grid gap-2 text-sm font-semibold">
+                      <span>Release title</span>
+                      <input
+                        name="releaseTitle"
+                        defaultValue={campaignIntake.releaseTitle}
+                        className="min-h-11 rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.08)] px-3 text-sm text-[var(--foreground)]"
+                        required
+                      />
+                    </label>
+                    <label className="grid gap-2 text-sm font-semibold">
+                      <span>Release date</span>
+                      <input
+                        type="date"
+                        name="releaseDate"
+                        defaultValue={campaignIntake.releaseDate}
+                        className="min-h-11 rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.08)] px-3 text-sm text-[var(--foreground)]"
+                        required
+                      />
+                    </label>
+                  </div>
+
+                  <label className="grid gap-2 text-sm font-semibold">
+                    <span>Artwork</span>
+                    <input
+                      name="artworkUrl"
+                      defaultValue={campaignIntake.artworkUrl}
+                      placeholder="/images/case44/cover.png or https://..."
+                      className="min-h-11 rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.08)] px-3 text-sm text-[var(--foreground)]"
+                    />
+                  </label>
+
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <Link2 className="size-4 text-[var(--brass-light)]" aria-hidden />
+                      <p className="text-sm font-bold">Platform links</p>
+                    </div>
+                    <div className="mt-3 grid gap-4 lg:grid-cols-2">
+                      <label className="grid gap-2 text-sm font-semibold">
+                        <span>Spotify</span>
+                        <input
+                          name="spotifyUrl"
+                          defaultValue={getCampaignLinkValue(
+                            campaignIntake,
+                            "spotifyUrl",
+                          )}
+                          className="min-h-11 rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.08)] px-3 text-sm text-[var(--foreground)]"
+                        />
+                      </label>
+                      <label className="grid gap-2 text-sm font-semibold">
+                        <span>Apple Music</span>
+                        <input
+                          name="appleMusicUrl"
+                          defaultValue={getCampaignLinkValue(
+                            campaignIntake,
+                            "appleMusicUrl",
+                          )}
+                          className="min-h-11 rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.08)] px-3 text-sm text-[var(--foreground)]"
+                        />
+                      </label>
+                      <label className="grid gap-2 text-sm font-semibold">
+                        <span>YouTube</span>
+                        <input
+                          name="youtubeUrl"
+                          defaultValue={getCampaignLinkValue(
+                            campaignIntake,
+                            "youtubeUrl",
+                          )}
+                          className="min-h-11 rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.08)] px-3 text-sm text-[var(--foreground)]"
+                        />
+                      </label>
+                      <label className="grid gap-2 text-sm font-semibold">
+                        <span>Social</span>
+                        <input
+                          name="socialUrl"
+                          defaultValue={getCampaignLinkValue(campaignIntake, "socialUrl")}
+                          className="min-h-11 rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.08)] px-3 text-sm text-[var(--foreground)]"
+                        />
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="grid gap-4 lg:grid-cols-2">
+                    <label className="grid gap-2 text-sm font-semibold">
+                      <span>Local show tie-ins</span>
+                      <textarea
+                        name="localTieIns"
+                        rows={5}
+                        defaultValue={campaignIntake.localTieIns}
+                        className="rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.08)] px-3 py-2 text-sm text-[var(--foreground)]"
+                      />
+                    </label>
+                    <div className="grid gap-4">
+                      <label className="grid gap-2 text-sm font-semibold">
+                        <span>Package intent</span>
+                        <select
+                          name="packageIntent"
+                          defaultValue={campaignIntake.packageIntent}
+                          className="min-h-11 rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.08)] px-3 text-sm text-[var(--foreground)]"
+                          required
+                        >
+                          {packageIntentOptions.includes(
+                            campaignIntake.packageIntent as (typeof packageIntentOptions)[number],
+                          ) ? null : (
+                            <option value={campaignIntake.packageIntent}>
+                              {campaignIntake.packageIntent}
+                            </option>
+                          )}
+                          {packageIntentOptions.map((option) => (
+                            <option key={option} value={option}>
+                              {option}
+                            </option>
+                          ))}
+                        </select>
+                      </label>
+                      <label className="grid gap-2 text-sm font-semibold">
+                        <span>Notes</span>
+                        <textarea
+                          name="notes"
+                          rows={5}
+                          defaultValue={campaignIntake.notes}
+                          className="rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.08)] px-3 py-2 text-sm text-[var(--foreground)]"
+                        />
+                      </label>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+                    <button
+                      type="submit"
+                      name="intent"
+                      value="draft"
+                      className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.08)] px-4 py-2 text-sm font-bold text-[var(--foreground)] transition hover:bg-[rgba(245,234,210,0.14)] focus:outline-none focus:ring-2 focus:ring-[var(--brass-light)]"
+                    >
+                      <Save className="size-4" aria-hidden />
+                      Save draft
+                    </button>
+                    <button
+                      type="submit"
+                      name="intent"
+                      value="submit"
+                      className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-[var(--brass)] px-4 py-2 text-sm font-bold text-[var(--ink)] transition hover:bg-[var(--brass-light)] focus:outline-none focus:ring-2 focus:ring-[var(--brass-light)]"
+                    >
+                      <Send className="size-4" aria-hidden />
+                      Submit for review
+                    </button>
+                  </div>
+                </form>
+              </section>
+            )}
 
             <div className="mt-6 grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
               <section
@@ -329,7 +642,7 @@ export default async function RoleDashboardPage({
               </section>
             </div>
 
-            <div className="mt-6 grid gap-6 xl:grid-cols-3">
+            <div className="mt-6 grid gap-6 xl:grid-cols-2">
               <section
                 id="billing"
                 className="rounded-md border border-[var(--line)] bg-[rgba(33,49,77,0.25)] p-5"
@@ -389,17 +702,6 @@ export default async function RoleDashboardPage({
                 </ButtonLink>
               </section>
 
-              <section
-                id="help"
-                className="rounded-md border border-[var(--line)] bg-[rgba(245,234,210,0.04)] p-5"
-              >
-                <Bot className="size-5 text-[var(--brass-light)]" aria-hidden />
-                <h3 className="mt-4 text-2xl font-black">Help</h3>
-                <p className="mt-3 text-sm leading-6 text-[var(--muted)]">
-                  The assistant drawer will answer plan questions, navigation tips,
-                  and next-step recommendations once the core workspace is stable.
-                </p>
-              </section>
             </div>
 
             <div className="mt-6 grid gap-6 lg:grid-cols-2">

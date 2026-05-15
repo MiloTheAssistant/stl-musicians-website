@@ -96,7 +96,7 @@ export function getCase44DashboardBand(): TestBandDashboard {
         description: "Draft posts and review connected account impact.",
       },
       {
-        label: "Events",
+        label: "Events Calendar",
         href: "#events",
         description: "Review upcoming shows and booking details.",
       },
@@ -109,11 +109,6 @@ export function getCase44DashboardBand(): TestBandDashboard {
         label: "Billing",
         href: "#billing",
         description: "View subscription tier and platform payment setup.",
-      },
-      {
-        label: "Help",
-        href: "#help",
-        description: "Get dashboard tips and subscription guidance.",
       },
     ],
     upcomingEvents: [

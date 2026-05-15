@@ -41,7 +41,16 @@ export type SongPromotionCampaign = {
   release: BandRelease;
   title: string;
   goal: "Release visibility";
-  status: "draft" | "requested" | "approved" | "paid" | "scheduled" | "completed";
+  status:
+    | "draft"
+    | "submitted"
+    | "needs_review"
+    | "requested"
+    | "approved"
+    | "paid"
+    | "in_fulfillment"
+    | "scheduled"
+    | "completed";
   promotionCampaignType: "song-release" | "album-launch";
   budgetCents: number;
   channels: SongPromotionChannelId[];
